@@ -19,7 +19,7 @@ import com.alorma.travis.ui.holder.drawable.IconicCompoundDrawableHolder;
 import com.alorma.travis.ui.holder.drawable.IconicDrawableHolder;
 import com.alorma.travis.ui.holder.string.LongStringPrimaryHolder;
 import com.alorma.travis.ui.holder.string.StringPrimaryHolder;
-import com.alorma.travis.ui.presenter.build.LastBuildPresenter;
+import com.alorma.travis.ui.presenter.builds.LastBuildPresenter;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.bean.utils.Credential;
