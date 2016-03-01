@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/account_row_height"
+    android:orientation="horizontal"
+    android:layout_gravity="top"
+    android:id="@+id/accountLy"
+    tools:showIn="@layout/activity_overview"
+    >
+
+  <de.hdodenhof.circleimageview.CircleImageView
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:layout_centerVertical="true"
+      android:id="@+id/currentAccountAvatar"
+      app:civ_border_width="2dp"
+      app:civ_border_color="@color/md_white_1000"
+      android:src="@drawable/travis_mascot_1"
+      />
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:gravity="center_vertical"
+      android:layout_toRightOf="@+id/currentAccountAvatar"
+      android:layout_toLeftOf="@+id/accountsExpand"
+      android:id="@+id/currentAccountName"
+      android:textColor="@color/md_white_1000"
+      android:paddingLeft="8dp"
+      tools:text="Alorma"
+      android:textStyle="bold"
+      android:textSize="22sp"
+      />
+
+  <ImageView
+      android:layout_width="?attr/actionBarSize"
+      android:layout_height="?attr/actionBarSize"
+      android:id="@+id/accountsExpand"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
+      android:src="@drawable/ic_arrow_down"
+      android:background="?selectableItemBackgroundBorderless"
+      android:padding="10dp"
+      />
+
+</RelativeLayout>
