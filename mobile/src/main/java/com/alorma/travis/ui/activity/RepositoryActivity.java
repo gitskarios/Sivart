@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
-import com.alorma.travis.ui.fragment.build.TravisBuildDetailFragment;
+import com.alorma.travis.ui.fragment.builds.TravisBuildDetailFragment;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.utils.Credential;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
