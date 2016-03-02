@@ -9,8 +9,6 @@ public class TravisBuildResponse {
   private TravisConfig config;
   private long duration;
 
-  @SerializedName("finished_at") private String finishedAt;
-
   private long id;
 
   @SerializedName("job_ids") private long[] jobs;
@@ -26,6 +24,8 @@ public class TravisBuildResponse {
   @SerializedName("repository_id") private String repoId;
 
   @SerializedName("started_at") private String startedAt;
+
+  @SerializedName("finished_at") private String finishedAt;
 
   @StringDef({
       BuildState.CREATED, BuildState.QUEUED, BuildState.STARTED, BuildState.PASSED,

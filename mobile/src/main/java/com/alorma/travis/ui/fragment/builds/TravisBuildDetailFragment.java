@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import com.alorma.travis.R;
 import com.alorma.travis.ui.adapter.BuildInfo;
 import com.alorma.travis.ui.adapter.BuildInfosAdapter;
+import com.alorma.travis.ui.adapter.JobBuildInfo;
 import com.alorma.travis.ui.holder.drawable.IconicCompoundDrawableHolder;
 import com.alorma.travis.ui.holder.drawable.IconicDrawableHolder;
 import com.alorma.travis.ui.holder.string.LongStringPrimaryHolder;
@@ -22,13 +23,15 @@ import com.alorma.travis.ui.holder.string.StringPrimaryHolder;
 import com.alorma.travis.ui.presenter.builds.LastBuildPresenter;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
+import com.alorma.travisdk.bean.response.TravisJobResponse;
 import com.alorma.travisdk.bean.utils.Credential;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.octicons_typeface_library.Octicons;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravisBuildDetailFragment extends Fragment implements LastBuildPresenter.LastBuildCallback {
+public class TravisBuildDetailFragment extends Fragment
+    implements LastBuildPresenter.LastBuildCallback {
 
   private Credential credential;
   private RepositoryResponse repositoryResponse;
@@ -129,6 +132,15 @@ public class TravisBuildDetailFragment extends Fragment implements LastBuildPres
       buildInfoStatus.setTitle(new LongStringPrimaryHolder(build.getBuild().getNumber()));
       buildInfoStatus.setValue(new StringPrimaryHolder(build.getBuild().getState().toLowerCase()));
       infos.add(buildInfoStatus);
+
+      List<TravisJobResponse> jobs = build.getJobs();
+
+      for (TravisJobResponse job : jobs) {
+        BuildInfo jobBuild = new JobBuildInfo();
+        jobBuild.setDrawableHolder(getIcon(getIconFromState(job)).color(getColorFromState(job)));
+        jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+        infos.add(jobBuild);
+      }
     }
   }
 
@@ -143,6 +155,30 @@ public class TravisBuildDetailFragment extends Fragment implements LastBuildPres
       return Color.YELLOW;
     }
     return Color.DKGRAY;
+  }
+
+  private int getColorFromState(TravisJobResponse job) {
+    if (job.isJobOk()) {
+      return Color.GREEN;
+    } else if (job.getState().equalsIgnoreCase("failed")) {
+      return Color.RED;
+    } else if (job.getState().equalsIgnoreCase("started") || job.getState()
+        .equalsIgnoreCase("created")) {
+      return Color.YELLOW;
+    }
+    return Color.DKGRAY;
+  }
+
+  private Octicons.Icon getIconFromState(TravisJobResponse job) {
+    if (job.isJobOk()) {
+      return Octicons.Icon.oct_check;
+    } else if (job.getState().equalsIgnoreCase("failed")) {
+      return Octicons.Icon.oct_x;
+    } else if (job.getState().equalsIgnoreCase("started") || job.getState()
+        .equalsIgnoreCase("created")) {
+      return Octicons.Icon.oct_zap;
+    }
+    return Octicons.Icon.oct_terminal;
   }
 
   private IconicDrawableHolder getIcon(IIcon icon) {

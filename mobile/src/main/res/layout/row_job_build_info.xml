@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/materialize_baseline_grid"
+    >
+  <TextView
+      android:id="@android:id/text1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/job_info_background"
+      android:textAppearance="?android:attr/textAppearanceListItemSmall"
+      android:gravity="center_vertical"
+      android:minHeight="?android:attr/listPreferredItemHeightSmall"
+      android:paddingLeft="@dimen/materialize_baseline_grid_x2"
+      android:paddingStart="@dimen/materialize_baseline_grid_x2"
+      android:clickable="true"
+      />
+</LinearLayout>
