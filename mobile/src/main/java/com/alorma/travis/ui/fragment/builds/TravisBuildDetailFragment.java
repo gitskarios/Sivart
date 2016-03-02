@@ -135,11 +135,13 @@ public class TravisBuildDetailFragment extends Fragment
 
       List<TravisJobResponse> jobs = build.getJobs();
 
-      for (TravisJobResponse job : jobs) {
-        BuildInfo jobBuild = new JobBuildInfo();
-        jobBuild.setDrawableHolder(getIcon(getIconFromState(job)).color(getColorFromState(job)));
-        jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
-        infos.add(jobBuild);
+      if (jobs != null && jobs.size() > 1) {
+        for (TravisJobResponse job : jobs) {
+          BuildInfo jobBuild = new JobBuildInfo();
+          jobBuild.setDrawableHolder(getIcon(getIconFromState(job)).color(getColorFromState(job)));
+          jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+          infos.add(jobBuild);
+        }
       }
     }
   }
