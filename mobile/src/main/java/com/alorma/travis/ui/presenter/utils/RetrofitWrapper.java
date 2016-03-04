@@ -10,6 +10,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitWrapper {
 
+  private String acceptParam;
+  private String contentType;
+  private String accept;
+
   public RetrofitWrapper() {
 
   }
@@ -64,20 +68,46 @@ public class RetrofitWrapper {
   private Request getRequest(Request original, String token) {
     Request.Builder builder = original.newBuilder()
         .header("User-Agent", "gitskarios-travis")
-        .header("Content-Type", "application/json")
-        .header("Accept", "application/vnd.travis-ci.2+json")
         .method(original.method(), original.body());
 
-    if (token != null) {
+    if (token != null && !token.isEmpty()) {
       builder.header("Authorization", "token " + token);
     }
 
-    builder = customizeRequest(builder);
+    if (accept != null && !accept.isEmpty()) {
+      if (acceptParam != null && !acceptParam.isEmpty()) {
+        accept = accept + "; " + acceptParam + ";";
+      }
+      builder.header("Accept", accept);
+    } else {
+      if (acceptParam != null && !acceptParam.isEmpty()) {
+        builder.header("Accept", "application/vnd.travis-ci.2+json;" + acceptParam + ";");
+      } else {
+        builder.header("Accept", "application/vnd.travis-ci.2+json");
+      }
+    }
+
+    if (contentType != null && !contentType.isEmpty()) {
+      builder.header("Content-Type", contentType);
+    } else {
+      builder.header("Content-Type", "application/json");
+    }
 
     return builder.build();
   }
 
-  protected Request.Builder customizeRequest(Request.Builder builder) {
-    return builder;
+  public RetrofitWrapper accept(String accept) {
+    this.accept = accept;
+    return this;
+  }
+
+  public RetrofitWrapper acceptParam(String param) {
+    this.acceptParam = param;
+    return this;
+  }
+
+  public RetrofitWrapper contentType(String contentType) {
+    this.contentType = contentType;
+    return this;
   }
 }

@@ -12,13 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.alorma.travis.R;
+import com.alorma.travisdk.bean.response.TravisJobResponse;
 
 public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.InfoHolder> {
 
   private static final int JOB_VIEW_TYPE = 1;
   private static final int INFO_VIEW_TYPE = 0;
+
+  private BuildInfoCallback buildInfoCallback;
 
   @Override
   public InfoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -89,6 +91,10 @@ public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.
     return INFO_VIEW_TYPE;
   }
 
+  public void setBuildInfoCallback(BuildInfoCallback buildInfoCallback) {
+    this.buildInfoCallback = buildInfoCallback;
+  }
+
   public class InfoHolder extends RecyclerView.ViewHolder {
     private final TextView text;
 
@@ -96,8 +102,17 @@ public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.
       super(itemView);
       text = (TextView) itemView.findViewById(android.R.id.text1);
       text.setOnClickListener(v -> {
-
+        BuildInfo buildInfo = get(getAdapterPosition());
+        if (buildInfo instanceof JobBuildInfo) {
+          if (buildInfoCallback != null) {
+            buildInfoCallback.onJobSelected(((JobBuildInfo) buildInfo).getJob());
+          }
+        }
       });
     }
+  }
+
+  public interface BuildInfoCallback {
+    void onJobSelected(TravisJobResponse jobResponse);
   }
 }

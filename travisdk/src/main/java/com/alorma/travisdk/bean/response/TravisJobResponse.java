@@ -1,15 +1,39 @@
 package com.alorma.travisdk.bean.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 import com.google.gson.annotations.SerializedName;
+import java.util.Arrays;
 
-public class TravisJobResponse {
+public class TravisJobResponse implements Parcelable {
 
   private long id;
   @SerializedName("repository_id") private long repositoryId;
   @SerializedName("build_id") private long buildId;
   @SerializedName("commit_id") private long commitId;
   @SerializedName("log_id") private long logId;
+
+  @Override
+  public String toString() {
+    return "TravisJobResponse{" +
+        "id=" + id +
+        ", repositoryId=" + repositoryId +
+        ", buildId=" + buildId +
+        ", commitId=" + commitId +
+        ", logId=" + logId +
+        ", state='" + state + '\'' +
+        ", number='" + number + '\'' +
+        ", config=" + config +
+        ", script='" + script + '\'' +
+        ", startedAt='" + startedAt + '\'' +
+        ", finishedAt='" + finishedAt + '\'' +
+        ", queue='" + queue + '\'' +
+        ", allowFailure=" + allowFailure +
+        ", annotationIds=" + Arrays.toString(annotationIds) +
+        ", tags=" + Arrays.toString(tags) +
+        '}';
+  }
 
   @StringDef({
       BuildState.CREATED, BuildState.QUEUED, BuildState.STARTED, BuildState.PASSED,
@@ -18,7 +42,7 @@ public class TravisJobResponse {
 
   }
 
-  @TravisJobResponse.State private String state;
+  private String state;
   private String number;
   private Object config;
   private String script;
@@ -158,4 +182,60 @@ public class TravisJobResponse {
   public boolean isJobOk() {
     return state != null && state.equalsIgnoreCase("passed");
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeLong(this.id);
+    dest.writeLong(this.repositoryId);
+    dest.writeLong(this.buildId);
+    dest.writeLong(this.commitId);
+    dest.writeLong(this.logId);
+    dest.writeString(this.state);
+    dest.writeString(this.number);
+    // TODO dest.writeParcelable(this.config, flags);
+    dest.writeString(this.script);
+    dest.writeString(this.startedAt);
+    dest.writeString(this.finishedAt);
+    dest.writeString(this.queue);
+    dest.writeByte(allowFailure ? (byte) 1 : (byte) 0);
+    dest.writeStringArray(this.annotationIds);
+    dest.writeStringArray(this.tags);
+  }
+
+  public TravisJobResponse() {
+  }
+
+  protected TravisJobResponse(Parcel in) {
+    this.id = in.readLong();
+    this.repositoryId = in.readLong();
+    this.buildId = in.readLong();
+    this.commitId = in.readLong();
+    this.logId = in.readLong();
+    this.state = in.readString();
+    this.number = in.readString();
+    // TODO this.config = in.readParcelable(Object.class.getClassLoader());
+    this.script = in.readString();
+    this.startedAt = in.readString();
+    this.finishedAt = in.readString();
+    this.queue = in.readString();
+    this.allowFailure = in.readByte() != 0;
+    this.annotationIds = in.createStringArray();
+    this.tags = in.createStringArray();
+  }
+
+  public static final Parcelable.Creator<TravisJobResponse> CREATOR =
+      new Parcelable.Creator<TravisJobResponse>() {
+        public TravisJobResponse createFromParcel(Parcel source) {
+          return new TravisJobResponse(source);
+        }
+
+        public TravisJobResponse[] newArray(int size) {
+          return new TravisJobResponse[size];
+        }
+      };
 }

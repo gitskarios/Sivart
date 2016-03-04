@@ -23,24 +23,27 @@ public class LastBuildPresenter extends BasePresenter {
   private Subscription subscription;
 
   public void start(Credential credential, RepositoryResponse repositoryResponse) {
-    GetBuildDataSource cache =
-        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getTravisUrl(), credential.getToken());
+    setupGithubToken(credential.getGithubToken());
+    setupGithubUrl(credential.getGithubUrl());
 
-    GetBuildDataSource api = new CacheGetBuildDataSource();
+    GetBuildDataSource api =
+        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getTravisUrl(),
+            credential.getToken());
+
+    GetBuildDataSource cache = new CacheGetBuildDataSource();
 
     GetBuildRepository repository = new GetBuildRepositoryImpl(cache, api);
-
     GetBuildInteractor interactor = new GetBuildInteractorImpl(repository);
 
-    subscription =
-        Observable.create(new BuildSubscriber(interactor, repositoryResponse.getId(), repositoryResponse.lastBuildId))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe(() -> lastBuildCallback.willLoadBuild())
-            .doOnCompleted(() -> lastBuildCallback.didLoadBuild())
-            .subscribe(build -> {
-              lastBuildCallback.buildLoaded(build);
-            }, Throwable::printStackTrace);
+    subscription = Observable.create(
+        new BuildSubscriber(interactor, repositoryResponse.getId(), repositoryResponse.lastBuildId))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> lastBuildCallback.willLoadBuild())
+        .doOnCompleted(() -> lastBuildCallback.didLoadBuild())
+        .subscribe(build -> {
+          lastBuildCallback.buildLoaded(build);
+        }, Throwable::printStackTrace);
   }
 
   public void stop() {

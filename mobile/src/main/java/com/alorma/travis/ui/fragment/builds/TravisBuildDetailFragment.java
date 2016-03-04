@@ -1,5 +1,6 @@
 package com.alorma.travis.ui.fragment.builds;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
+import com.alorma.travis.ui.activity.TravisJobActivityIntentBuilder;
 import com.alorma.travis.ui.adapter.BuildInfo;
 import com.alorma.travis.ui.adapter.BuildInfosAdapter;
 import com.alorma.travis.ui.adapter.JobBuildInfo;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TravisBuildDetailFragment extends Fragment
-    implements LastBuildPresenter.LastBuildCallback {
+    implements LastBuildPresenter.LastBuildCallback, BuildInfosAdapter.BuildInfoCallback {
 
   private Credential credential;
   private RepositoryResponse repositoryResponse;
@@ -57,6 +59,7 @@ public class TravisBuildDetailFragment extends Fragment
     presenter = new LastBuildPresenter();
 
     buildInfosAdapter = new BuildInfosAdapter();
+    buildInfosAdapter.setBuildInfoCallback(this);
     travisStates.setLayoutManager(new LinearLayoutManager(getActivity()));
     travisStates.setAdapter(buildInfosAdapter);
 
@@ -94,6 +97,7 @@ public class TravisBuildDetailFragment extends Fragment
   @Override
   public void buildLoaded(TravisBuild build) {
     List<BuildInfo> infos = mapBuildInfos(build);
+    buildInfosAdapter.clear();
     buildInfosAdapter.addAll(infos);
   }
 
@@ -137,9 +141,10 @@ public class TravisBuildDetailFragment extends Fragment
 
       if (jobs != null && jobs.size() > 1) {
         for (TravisJobResponse job : jobs) {
-          BuildInfo jobBuild = new JobBuildInfo();
+          JobBuildInfo jobBuild = new JobBuildInfo();
           jobBuild.setDrawableHolder(getIcon(getIconFromState(job)).color(getColorFromState(job)));
           jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+          jobBuild.setJob(job);
           infos.add(jobBuild);
         }
       }
@@ -197,5 +202,12 @@ public class TravisBuildDetailFragment extends Fragment
   public void onDestroy() {
     ButterKnife.unbind(this);
     super.onDestroy();
+  }
+
+  @Override
+  public void onJobSelected(TravisJobResponse jobResponse) {
+    Intent intent =
+        new TravisJobActivityIntentBuilder(jobResponse, credential).build(getActivity());
+    startActivity(intent);
   }
 }
