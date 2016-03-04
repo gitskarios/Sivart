@@ -11,16 +11,18 @@ public class ApiGetBuildDataSource implements GetBuildDataSource {
 
   private final RetrofitWrapper retrofit;
   private final String url;
+  private String token;
 
-  public ApiGetBuildDataSource(RetrofitWrapper retrofit, String url) {
+  public ApiGetBuildDataSource(RetrofitWrapper retrofit, String url, String token) {
     this.retrofit = retrofit;
     this.url = url;
+    this.token = token;
   }
 
   @Override
   public TravisBuild get(long repoId, long buildId) throws Exception {
     Call<TravisBuild> call =
-        retrofit.getRetrofit(url).create(BuildService.class).getBuild(buildId);
+        retrofit.getRetrofit(url, token).create(BuildService.class).getBuild(buildId);
 
     Response<TravisBuild> response = call.execute();
     if (response.isSuccess()) {

@@ -24,7 +24,7 @@ public class LastBuildPresenter extends BasePresenter {
 
   public void start(Credential credential, RepositoryResponse repositoryResponse) {
     GetBuildDataSource cache =
-        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getUrl());
+        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getTravisUrl(), credential.getToken());
 
     GetBuildDataSource api = new CacheGetBuildDataSource();
 

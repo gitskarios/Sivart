@@ -21,9 +21,11 @@ public class LoginActivity extends BaseActivity implements LoginPresenter.LoginP
     CredentialsAdapter.CredentialsAdapterCallback {
 
   @Bind(R.id.travis_url) EditText travisUrlEditText;
+  @Bind(R.id.github_enterprise_url) EditText githubEnterpriseUrl;
   @Bind(R.id.github_token) EditText githubTokenEditText;
   @Bind(R.id.github_username) TextView githubUsername;
   @Bind(R.id.gh_login) View githubLoginButton;
+  @Bind(R.id.gh_en_login) View githubEntepriseLoginButton;
 
   @Bind(R.id.login_form) View loginForm;
   @Bind(R.id.credentials_list) RecyclerView credentialsRecycler;
@@ -83,12 +85,20 @@ public class LoginActivity extends BaseActivity implements LoginPresenter.LoginP
     credentialsAdapter.clear();
 
     githubLoginButton.setOnClickListener(v -> githubLogin());
+    githubEntepriseLoginButton.setOnClickListener(v -> githubEnterpriseLogin());
   }
 
   private void githubLogin() {
     String ghToken = githubTokenEditText.getText().toString();
     String url = travisUrlEditText.getText().toString();
     presenter.githubLogin(ghToken, url);
+  }
+
+  private void githubEnterpriseLogin() {
+    String ghToken = githubTokenEditText.getText().toString();
+    String url = travisUrlEditText.getText().toString();
+    String enterpriseUrl = githubEnterpriseUrl.getText().toString();
+    presenter.githubLoginEnterprise(ghToken, url, enterpriseUrl);
   }
 
   @Override

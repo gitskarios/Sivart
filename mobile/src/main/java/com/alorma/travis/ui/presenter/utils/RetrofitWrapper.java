@@ -18,21 +18,34 @@ public class RetrofitWrapper {
     return createRetrofit(url);
   }
 
+  public Retrofit getRetrofit(String url, String token) {
+    return createRetrofit(url, token);
+  }
+
   protected Retrofit createRetrofit(String url) {
     Retrofit.Builder builder = new Retrofit.Builder();
     builder.baseUrl(() -> HttpUrl.parse(url));
     builder.addConverterFactory(GsonConverterFactory.create());
-    builder.client(createHttpClient());
+    builder.client(createHttpClient(null));
 
     return builder.build();
   }
 
-  protected OkHttpClient createHttpClient() {
+  protected Retrofit createRetrofit(String url, String token) {
+    Retrofit.Builder builder = new Retrofit.Builder();
+    builder.baseUrl(() -> HttpUrl.parse(url));
+    builder.addConverterFactory(GsonConverterFactory.create());
+    builder.client(createHttpClient(token));
+
+    return builder.build();
+  }
+
+  protected OkHttpClient createHttpClient(String token) {
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     httpClient.addInterceptor(chain -> {
       Request original = chain.request();
 
-      Request request = getRequest(original);
+      Request request = getRequest(original, token);
 
       return chain.proceed(request);
     });
@@ -48,12 +61,16 @@ public class RetrofitWrapper {
     return message -> Log.i("RETROFIT-TRAVIS", message);
   }
 
-  private Request getRequest(Request original) {
+  private Request getRequest(Request original, String token) {
     Request.Builder builder = original.newBuilder()
         .header("User-Agent", "gitskarios-travis")
         .header("Content-Type", "application/json")
         .header("Accept", "application/vnd.travis-ci.2+json")
         .method(original.method(), original.body());
+
+    if (token != null) {
+      builder.header("Authorization", "token " + token);
+    }
 
     builder = customizeRequest(builder);
 
@@ -63,5 +80,4 @@ public class RetrofitWrapper {
   protected Request.Builder customizeRequest(Request.Builder builder) {
     return builder;
   }
-
 }

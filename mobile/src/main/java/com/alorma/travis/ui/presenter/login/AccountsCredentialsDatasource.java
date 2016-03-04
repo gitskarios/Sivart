@@ -13,11 +13,9 @@ import java.util.List;
 public class AccountsCredentialsDatasource implements CredentialsDataSource {
 
   private final String accountType;
-  private Context context;
   private AccountManager accountManager;
 
   public AccountsCredentialsDatasource(Context context) {
-    this.context = context;
     this.accountManager = AccountManager.get(context);
     accountType = context.getString(R.string.account_type);
   }
@@ -37,7 +35,8 @@ public class AccountsCredentialsDatasource implements CredentialsDataSource {
     credential.setAvatar(accountManager.getUserData(account, "avatar"));
     credential.setGithubToken(accountManager.getUserData(account, "github_token"));
     credential.setToken(accountManager.getPassword(account));
-    credential.setUrl(accountManager.getUserData(account, "travis_url"));
+    credential.setTravisUrl(accountManager.getUserData(account, "travis_url"));
+    credential.setGithubUrl(accountManager.getUserData(account, "github_url"));
     credential.setName(account.name);
     return credential;
   }
@@ -58,7 +57,8 @@ public class AccountsCredentialsDatasource implements CredentialsDataSource {
     Bundle bundle = new Bundle();
     bundle.putString("avatar", credential.getAvatar());
     bundle.putString("github_token", credential.getGithubToken());
-    bundle.putString("travis_url", credential.getUrl());
+    bundle.putString("travis_url", credential.getTravisUrl());
+    bundle.putString("github_url", credential.getGithubUrl());
     Account account = new Account(credential.getName(), accountType);
     accountManager.addAccountExplicitly(account, credential.getToken(), bundle);
   }

@@ -31,6 +31,7 @@ public class AccountsPresenter extends RepositoriesPresenter {
   public void start() {
 
     setupGithubToken(credential.getGithubToken());
+    setupGithubUrl(credential.getGithubUrl());
 
     subscriptionUser = getUserCredentials().subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
@@ -50,7 +51,10 @@ public class AccountsPresenter extends RepositoriesPresenter {
 
   @NonNull
   private Observable<User> getUserCredentials() {
-    return new RequestUserClient(credential.getName()).observable();
+    return new RequestUserClient(credential.getName()).observable()
+        .doOnError(throwable -> {
+
+        });
   }
 
   private Observable<Organization> loadOrganizations() {

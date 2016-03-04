@@ -7,7 +7,7 @@ import retrofit2.http.Query;
 
 public interface ReposService {
 
-  @GET("/repos")
+  @GET("repos")
   Call<RepositoryListResponse> getRepos(@Query("owner_name") String member,
       @Query("active") boolean active);
 }

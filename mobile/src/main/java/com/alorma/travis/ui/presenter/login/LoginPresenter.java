@@ -82,11 +82,23 @@ public class LoginPresenter extends BasePresenter {
         .observeOn(AndroidSchedulers.mainThread());
 
     userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
-      confirmLogin(ghToken, url);
+      confirmLogin(ghToken, url, null);
     }, Throwable::printStackTrace);
   }
 
-  public void confirmLogin(String ghToken, String url) {
+  public void githubLoginEnterprise(String ghToken, String url, String enterpriseUrl) {
+    setupGithubUrl(enterpriseUrl);
+    GetAuthUserClient authUserClient = new GetAuthUserClient(ghToken);
+    Observable<User> userObservable = authUserClient.observable()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+
+    userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
+      confirmLogin(ghToken, url, enterpriseUrl);
+    }, Throwable::printStackTrace);
+  }
+
+  public void confirmLogin(String ghToken, String url, String githubUrl) {
     RetrofitWrapper retrofitWrapper = new RetrofitWrapper();
     CredentialsDataSource apiDatasource = new ApiCredentialsDataSource(retrofitWrapper);
     AuthenticationRepository authenticationRepository =
@@ -99,7 +111,8 @@ public class LoginPresenter extends BasePresenter {
         subscriber.onStart();
         Credential credential = new Credential();
         credential.setGithubToken(ghToken);
-        credential.setUrl(url);
+        credential.setTravisUrl(url);
+        credential.setGithubUrl(githubUrl);
         credential.setName(githubUser.login);
         credential.setAvatar(githubUser.avatar_url);
 

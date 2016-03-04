@@ -13,16 +13,18 @@ public class ApiTravisRepositoriesDataSource implements TravisRepositoriesDataSo
 
   private RetrofitWrapper retrofit;
   private String url;
+  private String token;
 
-  public ApiTravisRepositoriesDataSource(RetrofitWrapper retrofit, String url) {
+  public ApiTravisRepositoriesDataSource(RetrofitWrapper retrofit, String url, String token) {
     this.retrofit = retrofit;
     this.url = url;
+    this.token = token;
   }
 
   @Override
   public List<RepositoryResponse> getRepos(String owner, boolean active) throws Exception {
     Call<RepositoryListResponse> call =
-        retrofit.getRetrofit(url).create(ReposService.class).getRepos(owner, active);
+        retrofit.getRetrofit(url, token).create(ReposService.class).getRepos(owner, active);
 
     Response<RepositoryListResponse> response = call.execute();
     if (response.isSuccess()) {
