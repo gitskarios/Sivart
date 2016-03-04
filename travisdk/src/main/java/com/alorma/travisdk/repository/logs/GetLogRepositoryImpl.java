@@ -1,5 +1,6 @@
 package com.alorma.travisdk.repository.logs;
 
+import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.logs.GetLogDataSource;
 
 public class GetLogRepositoryImpl implements GetLogRepository {
@@ -18,5 +19,10 @@ public class GetLogRepositoryImpl implements GetLogRepository {
       log = api.getLog(jobId);
     }
     return log;
+  }
+
+  @Override
+  public void setCredential(Credential credential) {
+    api.setCredential(credential);
   }
 }

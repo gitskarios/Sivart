@@ -30,9 +30,7 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
     setContentView(R.layout.activity_job);
     ButterKnife.bind(this);
 
-    textLog.setText(String.valueOf(jobResponse));
-
-    LogPresenter logPresenter = new LogPresenter(credential, jobResponse);
+    LogPresenter logPresenter = new LogPresenter(jobResponse);
     logPresenter.setLogCallback(this);
     logPresenter.start();
   }
