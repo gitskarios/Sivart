@@ -78,7 +78,7 @@ public class LoginPresenter extends BasePresenter {
   public void githubLogin(String ghToken, String url) {
     GetAuthUserClient authUserClient = new GetAuthUserClient(ghToken);
     Observable<User> userObservable = authUserClient.observable()
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread());
 
     userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
@@ -90,7 +90,7 @@ public class LoginPresenter extends BasePresenter {
     setupGithubUrl(enterpriseUrl);
     GetAuthUserClient authUserClient = new GetAuthUserClient(ghToken);
     Observable<User> userObservable = authUserClient.observable()
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread());
 
     userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
@@ -125,7 +125,7 @@ public class LoginPresenter extends BasePresenter {
       }
     });
 
-    observable.subscribeOn(Schedulers.io())
+    observable.subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(credential -> start())
         .subscribe(credential1 -> {

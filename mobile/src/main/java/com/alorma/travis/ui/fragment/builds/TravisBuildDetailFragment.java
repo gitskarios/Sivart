@@ -26,7 +26,6 @@ import com.alorma.travis.ui.presenter.builds.LastBuildPresenter;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.bean.response.TravisJobResponse;
-import com.alorma.travisdk.bean.utils.Credential;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.octicons_typeface_library.Octicons;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import java.util.List;
 public class TravisBuildDetailFragment extends Fragment
     implements LastBuildPresenter.LastBuildCallback, BuildInfosAdapter.BuildInfoCallback {
 
-  private Credential credential;
   private RepositoryResponse repositoryResponse;
   private LastBuildPresenter presenter;
 
@@ -71,8 +69,8 @@ public class TravisBuildDetailFragment extends Fragment
     super.onStart();
 
     presenter.setLastBuildCallback(this);
-    if (credential != null && repositoryResponse != null) {
-      presenter.start(credential, repositoryResponse);
+    if (repositoryResponse != null) {
+      presenter.start(repositoryResponse);
     }
   }
 
@@ -84,7 +82,6 @@ public class TravisBuildDetailFragment extends Fragment
 
   private void readArguments() {
     if (getArguments() != null) {
-      credential = getArguments().getParcelable(Credential.class.getSimpleName());
       repositoryResponse = getArguments().getParcelable(RepositoryResponse.class.getSimpleName());
     }
   }
@@ -110,42 +107,46 @@ public class TravisBuildDetailFragment extends Fragment
   }
 
   private void mapBuildCommit(TravisBuild build, List<BuildInfo> infos) {
-    if (build.getCommit() != null) {
-      BuildInfo buildInfoBranch = new BuildInfo();
-      buildInfoBranch.setDrawableHolder(getIcon(Octicons.Icon.oct_git_branch));
-      buildInfoBranch.setTitle(new StringPrimaryHolder("Branch"));
-      buildInfoBranch.setValue(new StringPrimaryHolder(build.getCommit().getBranch()));
-      infos.add(buildInfoBranch);
+    if (build != null) {
+      if (build.getCommit() != null) {
+        BuildInfo buildInfoBranch = new BuildInfo();
+        buildInfoBranch.setDrawableHolder(getIcon(Octicons.Icon.oct_git_branch));
+        buildInfoBranch.setTitle(new StringPrimaryHolder("Branch"));
+        buildInfoBranch.setValue(new StringPrimaryHolder(build.getCommit().getBranch()));
+        infos.add(buildInfoBranch);
 
-      BuildInfo buildInfoCommitter = new BuildInfo();
-      buildInfoCommitter.setDrawableHolder(getIcon(Octicons.Icon.oct_person));
-      buildInfoCommitter.setTitle(new StringPrimaryHolder("Author"));
-      buildInfoCommitter.setValue(new StringPrimaryHolder(build.getCommit().getAuthorName()));
-      infos.add(buildInfoCommitter);
+        BuildInfo buildInfoCommitter = new BuildInfo();
+        buildInfoCommitter.setDrawableHolder(getIcon(Octicons.Icon.oct_person));
+        buildInfoCommitter.setTitle(new StringPrimaryHolder("Author"));
+        buildInfoCommitter.setValue(new StringPrimaryHolder(build.getCommit().getAuthorName()));
+        infos.add(buildInfoCommitter);
 
-      BuildInfo buildInfoCommitSha = new BuildInfo();
-      buildInfoCommitSha.setDrawableHolder(getIcon(Octicons.Icon.oct_git_commit));
-      buildInfoCommitSha.setTitle(new StringPrimaryHolder("Commit"));
-      buildInfoCommitSha.setValue(
-          new StringPrimaryHolder(build.getCommit().getSha().substring(0, 8)));
-      infos.add(buildInfoCommitSha);
+        BuildInfo buildInfoCommitSha = new BuildInfo();
+        buildInfoCommitSha.setDrawableHolder(getIcon(Octicons.Icon.oct_git_commit));
+        buildInfoCommitSha.setTitle(new StringPrimaryHolder("Commit"));
+        buildInfoCommitSha.setValue(
+            new StringPrimaryHolder(build.getCommit().getSha().substring(0, 8)));
+        infos.add(buildInfoCommitSha);
 
-      BuildInfo buildInfoStatus = new BuildInfo();
-      buildInfoStatus.setDrawableHolder(
-          getIcon(Octicons.Icon.oct_git_commit).color(getColorFromState(build)));
-      buildInfoStatus.setTitle(new LongStringPrimaryHolder(build.getBuild().getNumber()));
-      buildInfoStatus.setValue(new StringPrimaryHolder(build.getBuild().getState().toLowerCase()));
-      infos.add(buildInfoStatus);
+        BuildInfo buildInfoStatus = new BuildInfo();
+        buildInfoStatus.setDrawableHolder(
+            getIcon(Octicons.Icon.oct_git_commit).color(getColorFromState(build)));
+        buildInfoStatus.setTitle(new LongStringPrimaryHolder(build.getBuild().getNumber()));
+        buildInfoStatus.setValue(
+            new StringPrimaryHolder(build.getBuild().getState().toLowerCase()));
+        infos.add(buildInfoStatus);
 
-      List<TravisJobResponse> jobs = build.getJobs();
+        List<TravisJobResponse> jobs = build.getJobs();
 
-      if (jobs != null && jobs.size() > 1) {
-        for (TravisJobResponse job : jobs) {
-          JobBuildInfo jobBuild = new JobBuildInfo();
-          jobBuild.setDrawableHolder(getIcon(getIconFromState(job)).color(getColorFromState(job)));
-          jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
-          jobBuild.setJob(job);
-          infos.add(jobBuild);
+        if (jobs != null && jobs.size() > 1) {
+          for (TravisJobResponse job : jobs) {
+            JobBuildInfo jobBuild = new JobBuildInfo();
+            jobBuild.setDrawableHolder(
+                getIcon(getIconFromState(job)).color(getColorFromState(job)));
+            jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+            jobBuild.setJob(job);
+            infos.add(jobBuild);
+          }
         }
       }
     }
@@ -206,8 +207,7 @@ public class TravisBuildDetailFragment extends Fragment
 
   @Override
   public void onJobSelected(TravisJobResponse jobResponse) {
-    Intent intent =
-        new TravisJobActivityIntentBuilder(jobResponse, credential).build(getActivity());
+    Intent intent = new TravisJobActivityIntentBuilder(jobResponse).build(getActivity());
     startActivity(intent);
   }
 }

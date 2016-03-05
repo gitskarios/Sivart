@@ -4,14 +4,13 @@ import com.alorma.travis.ui.presenter.BasePresenter;
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
-import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.builds.GetBuildDataSource;
 import com.alorma.travisdk.datasource.builds.cache.CacheGetBuildDataSource;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractor;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractorImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import com.alorma.travisdk.repository.builds.GetBuildRepositoryImpl;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -22,22 +21,17 @@ public class LastBuildPresenter extends BasePresenter {
   private LastBuildCallback lastBuildCallback = lastBuildCallbackNull;
   private Subscription subscription;
 
-  public void start(Credential credential, RepositoryResponse repositoryResponse) {
-    setupGithubToken(credential.getGithubToken());
-    setupGithubUrl(credential.getGithubUrl());
-
-    GetBuildDataSource api =
-        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getTravisUrl(),
-            credential.getToken());
+  public void start(RepositoryResponse repositoryResponse) {
+    GetBuildDataSource api = new ApiGetBuildDataSource(new RetrofitWrapper());
 
     GetBuildDataSource cache = new CacheGetBuildDataSource();
 
     GetBuildRepository repository = new GetBuildRepositoryImpl(cache, api);
-    GetBuildInteractor interactor = new GetBuildInteractorImpl(repository);
+    GetBuildInteractor interactor =
+        new GetBuildInteractorImpl(repository, ActiveCredentialRepositoryImpl.getInstance());
 
-    subscription = Observable.create(
-        new BuildSubscriber(interactor, repositoryResponse.getId(), repositoryResponse.lastBuildId))
-        .subscribeOn(Schedulers.io())
+    subscription = interactor.get(repositoryResponse.getId(), repositoryResponse.lastBuildId)
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> lastBuildCallback.willLoadBuild())
         .doOnCompleted(() -> lastBuildCallback.didLoadBuild())

@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Observable;
+import rx.observers.TestSubscriber;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GetBuildRepositoryTest {
@@ -21,6 +21,8 @@ public class GetBuildRepositoryTest {
   @Mock GetBuildDataSource cache;
   @Mock GetBuildDataSource api;
 
+  private TestSubscriber<TravisBuild> testSubscriber;
+
   @Mock private TravisBuild MOCKED_TRAVIS_BUILD_CACHE;
   @Mock private TravisBuild MOCKED_TRAVIS_BUILD_API;
 
@@ -29,46 +31,51 @@ public class GetBuildRepositoryTest {
     MockitoAnnotations.initMocks(this);
 
     repository = new GetBuildRepositoryImpl(cache, api);
+
+    testSubscriber = new TestSubscriber<>();
   }
 
   @Test
   public void ShouldReturnNull_whenCacheIsNullAndApiIsNull() throws Exception {
-    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(null);
-    when(api.get(REPO_ID, BUILD_ID)).thenReturn(null);
+    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(Observable.empty());
+    when(api.get(REPO_ID, BUILD_ID)).thenReturn(Observable.empty());
 
-    TravisBuild travisBuild = repository.get(REPO_ID, BUILD_ID);
+    Observable<TravisBuild> observable = repository.get(REPO_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
 
-    assertThat(travisBuild).isNull();
+    testSubscriber.assertNoValues();
   }
 
   @Test
   public void ShouldReturnNull_whenCacheIsEmptyAndApiIsOk() throws Exception {
-    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(null);
-    when(api.get(REPO_ID, BUILD_ID)).thenReturn(MOCKED_TRAVIS_BUILD_API);
+    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(Observable.empty());
+    when(api.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(MOCKED_TRAVIS_BUILD_API));
 
-    TravisBuild travisBuild = repository.get(REPO_ID, BUILD_ID);
+    Observable<TravisBuild> observable = repository.get(REPO_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
 
-    assertThat(travisBuild).isEqualTo(MOCKED_TRAVIS_BUILD_API);
+    testSubscriber.assertValue(MOCKED_TRAVIS_BUILD_API);
   }
 
   @Test
-  public void ShouldReturnValid_whenCacheIsOkAndApiIsOk() throws Exception {
-    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(MOCKED_TRAVIS_BUILD_CACHE);
-    when(api.get(REPO_ID, BUILD_ID)).thenReturn(MOCKED_TRAVIS_BUILD_API);
+  public void ShouldReturnValidFromCache_whenCacheIsOkAndApiIsOk() throws Exception {
+    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(MOCKED_TRAVIS_BUILD_CACHE));
+    when(api.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(MOCKED_TRAVIS_BUILD_API));
 
-    TravisBuild travisBuild = repository.get(REPO_ID, BUILD_ID);
+    Observable<TravisBuild> observable = repository.get(REPO_ID, BUILD_ID);
+    observable.first().subscribe(testSubscriber);
 
-    assertThat(travisBuild).isEqualTo(MOCKED_TRAVIS_BUILD_CACHE);
+    testSubscriber.assertValue(MOCKED_TRAVIS_BUILD_CACHE);
   }
 
   @Test
-  public void ShouldCallSave_whenCacheIsEmptyAndApiIsOk() throws Exception {
-    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(null);
-    when(api.get(REPO_ID, BUILD_ID)).thenReturn(MOCKED_TRAVIS_BUILD_API);
+  public void ShouldReturnValidFromCacheAndApi_whenCacheIsOkAndApiIsOk() throws Exception {
+    when(cache.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(MOCKED_TRAVIS_BUILD_CACHE));
+    when(api.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(MOCKED_TRAVIS_BUILD_API));
 
-    repository.get(REPO_ID, BUILD_ID);
+    Observable<TravisBuild> observable = repository.get(REPO_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
 
-    verify(cache).save(REPO_ID, BUILD_ID, MOCKED_TRAVIS_BUILD_API);
-
+    testSubscriber.assertValues(MOCKED_TRAVIS_BUILD_CACHE, MOCKED_TRAVIS_BUILD_API);
   }
 }

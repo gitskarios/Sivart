@@ -2,7 +2,8 @@ package com.alorma.travisdk.interactor.repos;
 
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import java.util.List;
+import rx.Observable;
 
 public interface ReposInteractor {
-  List<RepositoryResponse> getRepos(String owner, boolean active) throws Exception;
+  Observable<List<RepositoryResponse>> getRepos(String owner, boolean active);
 }

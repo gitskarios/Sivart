@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Observable;
+import rx.observers.TestSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyBoolean;
@@ -25,6 +27,7 @@ public class TravisRepositoriesRepositoryTest {
   @Mock TravisRepositoriesDataSource apiDatasource;
 
   private TravisRepositoriesRepositoryImpl repository;
+  private TestSubscriber<List<RepositoryResponse>> testSubscriber;
 
   @Before
   public void setUp() throws Exception {
@@ -32,57 +35,64 @@ public class TravisRepositoriesRepositoryTest {
 
     repository = new TravisRepositoriesRepositoryImpl(cacheDatasource, apiDatasource);
 
+    testSubscriber = new TestSubscriber<>();
+
     ANY_LIST.add(new RepositoryResponse());
     ANY_LIST.add(new RepositoryResponse());
   }
 
   @Test
   public void shouldReturnNull_whenNoCacheAndNoApi() throws Exception {
-    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
-    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
+    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
+    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
 
-    List<RepositoryResponse> repos = repository.getRepos(anyString(), anyBoolean());
+    Observable<List<RepositoryResponse>> repos = repository.getRepos(anyString(), anyBoolean());
+    repos.subscribe(testSubscriber);
 
-    assertThat(repos).isNull();
+    testSubscriber.assertNoValues();
   }
 
   @Test
   public void shouldReturnEmpty_whenNoCacheAndEmptyApi() throws Exception {
-    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
-    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(ANY_LIST);
+    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
+    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(EMPTY_LIST));
 
-    List<RepositoryResponse> repos = repository.getRepos(anyString(), anyBoolean());
+    Observable<List<RepositoryResponse>> repos = repository.getRepos(anyString(), anyBoolean());
+    repos.subscribe(testSubscriber);
 
-    assertThat(repos).isNotEmpty();
+    testSubscriber.assertNoValues();
   }
 
   @Test
   public void shouldReturnNotEmpty_whenNoCacheAndAnyApi() throws Exception {
-    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
-    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(ANY_LIST);
+    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
+    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(ANY_LIST));
 
-    List<RepositoryResponse> repos = repository.getRepos(anyString(), anyBoolean());
+    Observable<List<RepositoryResponse>> repos = repository.getRepos(anyString(), anyBoolean());
+    repos.subscribe(testSubscriber);
 
-    assertThat(repos).isNotEmpty();
+    testSubscriber.assertValue(ANY_LIST);
   }
 
   @Test
   public void shouldReturnEmpty_whenEmptyCache() throws Exception {
-    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(EMPTY_LIST);
-    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
+    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(EMPTY_LIST));
+    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
 
-    List<RepositoryResponse> repos = repository.getRepos(anyString(), anyBoolean());
+    Observable<List<RepositoryResponse>> repos = repository.getRepos(anyString(), anyBoolean());
+    repos.subscribe(testSubscriber);
 
-    assertThat(repos).isEmpty();
+    testSubscriber.assertNoValues();
   }
 
   @Test
   public void shouldReturnNotEmpty_whenAnyCache() throws Exception {
-    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(ANY_LIST);
-    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(NULL_LIST);
+    when(cacheDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(ANY_LIST));
+    when(apiDatasource.getRepos(anyString(), anyBoolean())).thenReturn(Observable.just(NULL_LIST));
 
-    List<RepositoryResponse> repos = repository.getRepos(anyString(), anyBoolean());
+    Observable<List<RepositoryResponse>> repos = repository.getRepos(anyString(), anyBoolean());
+    repos.subscribe(testSubscriber);
 
-    assertThat(repos).isNotEmpty();
+    testSubscriber.assertValue(ANY_LIST);
   }
 }
