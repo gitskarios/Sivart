@@ -9,13 +9,6 @@ public class ActiveCredentialRepositoryImpl implements ActiveCredentialRepositor
 
   public static ActiveCredentialRepository getInstance() {
     if (INSTANCE == null) {
-      throw new IllegalStateException("ActiveCredentialRepository has not been initialized");
-    }
-    return INSTANCE;
-  }
-
-  public static ActiveCredentialRepository init() {
-    if (INSTANCE == null) {
       INSTANCE = new ActiveCredentialRepositoryImpl();
     }
     return INSTANCE;

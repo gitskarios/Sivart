@@ -4,5 +4,5 @@ import rx.Observable;
 
 public interface GetJobLogInteractor {
   String getLog(long jobId) throws Exception;
-  Observable<String> getLogObservabe(long jobId);
+  Observable<String> getLogObservable(long jobId);
 }

@@ -2,6 +2,7 @@ package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
+import rx.Observable;
 
 public class GetBuildInteractorImpl implements GetBuildInteractor {
 
@@ -12,17 +13,17 @@ public class GetBuildInteractorImpl implements GetBuildInteractor {
   }
 
   @Override
-  public TravisBuild get(long repoId, long buildId) throws Exception {
+  public Observable<TravisBuild> get(long repoId, long buildId) {
     if (repoId < 0) {
-      throw new IllegalArgumentException("repoId cannot be negative");
+      return Observable.error(new IllegalArgumentException("repoId cannot be negative"));
     } else if (repoId == 0) {
-      throw new IllegalArgumentException("repoId cannot be zero");
+      return Observable.error(new IllegalArgumentException("repoId cannot be zero"));
     }
 
     if (buildId < 0) {
-      throw new IllegalArgumentException("buildId cannot be negative");
+      return Observable.error(new IllegalArgumentException("buildId cannot be negative"));
     } else if (buildId == 0) {
-      throw new IllegalArgumentException("buildId cannot be zero");
+      return Observable.error(new IllegalArgumentException("buildId cannot be zero"));
     }
     return getBuildRepository.get(repoId, buildId);
   }

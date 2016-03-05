@@ -20,7 +20,7 @@ public class GetJobLogInteractorImpl implements GetJobLogInteractor {
   }
 
   @Override
-  public Observable<String> getLogObservabe(long jobId) {
+  public Observable<String> getLogObservable(long jobId) {
     return credentialRepository.getCredential().flatMap(credential -> {
       repository.setCredential(credential);
       return logObservable(jobId);

@@ -32,7 +32,7 @@ public class LogPresenter extends BasePresenter {
     GetLogRepository repository = new GetLogRepositoryImpl(cacheDataSource, apiDataSource);
 
     Observable<String> logObservabe = new GetJobLogInteractorImpl(repository,
-        ActiveCredentialRepositoryImpl.getInstance()).getLogObservabe(jobResponse.getId());
+        ActiveCredentialRepositoryImpl.getInstance()).getLogObservable(jobResponse.getId());
 
     logObservabe.subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())

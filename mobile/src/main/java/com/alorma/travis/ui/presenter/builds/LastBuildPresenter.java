@@ -27,8 +27,7 @@ public class LastBuildPresenter extends BasePresenter {
     setupGithubUrl(credential.getGithubUrl());
 
     GetBuildDataSource api =
-        new ApiGetBuildDataSource(new RetrofitWrapper(), credential.getTravisUrl(),
-            credential.getToken());
+        new ApiGetBuildDataSource(new RetrofitWrapper());
 
     GetBuildDataSource cache = new CacheGetBuildDataSource();
 

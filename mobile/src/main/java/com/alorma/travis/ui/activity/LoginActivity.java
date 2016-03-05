@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity implements LoginPresenter.LoginP
 
   @Override
   public void onCredentialSelected(Credential credential) {
-    ActiveCredentialRepository repository = ActiveCredentialRepositoryImpl.init();
+    ActiveCredentialRepository repository = ActiveCredentialRepositoryImpl.getInstance();
     repository.set(credential);
     // TODO remove extra credential
     Intent intent = new OverviewActivityIntentBuilder(credential).build(this);

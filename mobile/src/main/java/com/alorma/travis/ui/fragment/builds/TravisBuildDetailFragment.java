@@ -206,8 +206,7 @@ public class TravisBuildDetailFragment extends Fragment
 
   @Override
   public void onJobSelected(TravisJobResponse jobResponse) {
-    Intent intent =
-        new TravisJobActivityIntentBuilder(jobResponse, credential).build(getActivity());
+    Intent intent = new TravisJobActivityIntentBuilder(jobResponse).build(getActivity());
     startActivity(intent);
   }
 }

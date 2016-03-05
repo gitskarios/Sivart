@@ -21,7 +21,7 @@ public class ActiveCredentialRepositoryImplTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    repository = ActiveCredentialRepositoryImpl.init();
+    repository = ActiveCredentialRepositoryImpl.getInstance();
   }
 
   @Test(expected = IllegalStateException.class)

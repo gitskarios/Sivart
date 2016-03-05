@@ -17,7 +17,6 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
     implements LogPresenter.LogCallback {
 
   @Extra TravisJobResponse jobResponse;
-  @Extra Credential credential;
 
   @Bind(android.R.id.text1) TextView textLog;
 
