@@ -1,6 +1,7 @@
 package com.alorma.travisdk.interactor.repos;
 
 import com.alorma.travisdk.bean.response.RepositoryResponse;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepository;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +28,8 @@ public class GetTravisRepositoriesInteractorImplTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    repositoriesInteractor = new GetTravisRepositoriesInteractorImpl(repository);
+    repositoriesInteractor = new GetTravisRepositoriesInteractorImpl(repository,
+        ActiveCredentialRepositoryImpl.getInstance());
 
     ANY_LIST.add(new RepositoryResponse());
     ANY_LIST.add(new RepositoryResponse());

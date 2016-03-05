@@ -24,7 +24,7 @@ public class AccountsPresenter extends RepositoriesPresenter {
   private Subscription subscriptionUser;
 
   public AccountsPresenter(Credential credential) {
-    super(credential);
+    super();
     this.credential = credential;
   }
 

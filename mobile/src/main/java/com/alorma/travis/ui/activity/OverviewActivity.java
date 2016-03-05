@@ -185,7 +185,10 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
   @Override
   public void repositoriesLoaded(List<RepositoryResponse> responses) {
-    reposAdapter.addAll(responses);
+    if (reposAdapter != null) {
+      reposAdapter.clear();
+      reposAdapter.addAll(responses);
+    }
   }
 
   @Override
