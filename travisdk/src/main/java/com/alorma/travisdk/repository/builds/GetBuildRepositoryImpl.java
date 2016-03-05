@@ -21,7 +21,7 @@ public class GetBuildRepositoryImpl implements GetBuildRepository {
     Observable<TravisBuild> apiObs = api.get(repoId, buildId);
     apiObs.doOnNext(build -> cache.save(repoId, buildId, build));
 
-    return Observable.concat(cacheObs, apiObs);
+    return Observable.concat(cacheObs, apiObs).filter(build -> build != null);
   }
 
   @Override

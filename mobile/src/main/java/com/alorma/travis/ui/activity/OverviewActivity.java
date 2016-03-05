@@ -157,7 +157,7 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
   @Override
   public void onRepoSelected(RepositoryResponse repositoryResponse) {
-    Intent intent = new RepositoryActivityIntentBuilder(credential, repositoryResponse).build(this);
+    Intent intent = new RepositoryActivityIntentBuilder(repositoryResponse).build(this);
     startActivity(intent);
   }
 

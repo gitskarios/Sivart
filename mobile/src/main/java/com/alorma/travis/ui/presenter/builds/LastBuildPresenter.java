@@ -11,7 +11,6 @@ import com.alorma.travisdk.interactor.builds.GetBuildInteractor;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractorImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import com.alorma.travisdk.repository.builds.GetBuildRepositoryImpl;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -23,18 +22,16 @@ public class LastBuildPresenter extends BasePresenter {
   private Subscription subscription;
 
   public void start(RepositoryResponse repositoryResponse) {
-    GetBuildDataSource api =
-        new ApiGetBuildDataSource(new RetrofitWrapper());
+    GetBuildDataSource api = new ApiGetBuildDataSource(new RetrofitWrapper());
 
     GetBuildDataSource cache = new CacheGetBuildDataSource();
 
     GetBuildRepository repository = new GetBuildRepositoryImpl(cache, api);
-    GetBuildInteractor interactor = new GetBuildInteractorImpl(repository, ActiveCredentialRepositoryImpl
-        .getInstance());
+    GetBuildInteractor interactor =
+        new GetBuildInteractorImpl(repository, ActiveCredentialRepositoryImpl.getInstance());
 
-    subscription = Observable.create(
-        new BuildSubscriber(interactor, repositoryResponse.getId(), repositoryResponse.lastBuildId))
-        .subscribeOn(Schedulers.io())
+    subscription = interactor.get(repositoryResponse.getId(), repositoryResponse.lastBuildId)
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> lastBuildCallback.willLoadBuild())
         .doOnCompleted(() -> lastBuildCallback.didLoadBuild())
