@@ -1,8 +1,11 @@
 package com.alorma.travisdk.bean.response;
 
+import com.google.gson.annotations.SerializedName;
+
 public class GithubAccount {
   public int id;
   public String login;
+  @SerializedName("avatar_url") public String avatarUrl;
   public String name;
   public String type;
 
@@ -36,5 +39,13 @@ public class GithubAccount {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
   }
 }

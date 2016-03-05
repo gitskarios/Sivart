@@ -32,6 +32,7 @@ public class CredentialsPresenter extends BasePresenter {
 
   private final AndroidAccountsCredentialsDatasource cacheDataSource;
   private Subscription subscription;
+  private Map<Credential, List<GithubAccount>> map;
 
   public CredentialsPresenter(Context context) {
     cacheDataSource = new AndroidAccountsCredentialsDatasource(context);
@@ -46,6 +47,7 @@ public class CredentialsPresenter extends BasePresenter {
           for (Pair<Credential, List<GithubAccount>> pair : pairs) {
             credentialMap.put(pair.first, pair.second);
           }
+          CredentialsPresenter.this.map = credentialMap;
           return credentialMap;
         })
         .observeOn(AndroidSchedulers.mainThread())
@@ -94,6 +96,19 @@ public class CredentialsPresenter extends BasePresenter {
     callback = callbackNull;
   }
 
+  public boolean selectAccountWithId(long identifier) {
+    for (Credential credential : map.keySet()) {
+      List<GithubAccount> accountList = map.get(credential);
+      for (GithubAccount githubAccount : accountList) {
+        if (githubAccount.getId() == identifier) {
+          callback.loadAccount(githubAccount);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public interface CredentialsPresenterCallback {
     void willLoadCredentials();
 
@@ -102,6 +117,8 @@ public class CredentialsPresenter extends BasePresenter {
     void showListCredentials(Map<Credential, List<GithubAccount>> credentials);
 
     void didLoadCredentials();
+
+    void loadAccount(GithubAccount account);
 
     class NullCallback implements CredentialsPresenterCallback {
 
@@ -122,6 +139,11 @@ public class CredentialsPresenter extends BasePresenter {
 
       @Override
       public void didLoadCredentials() {
+
+      }
+
+      @Override
+      public void loadAccount(GithubAccount account) {
 
       }
     }
