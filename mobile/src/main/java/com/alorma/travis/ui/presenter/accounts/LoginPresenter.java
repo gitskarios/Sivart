@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.login;
+package com.alorma.travis.ui.presenter.accounts;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

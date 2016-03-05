@@ -50,6 +50,9 @@ dependencies {
   compile 'com.mikepenz:iconics-core:2.5.7@aar'
   compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
   compile 'com.mikepenz:octicons-typeface:3.2.0.1@aar'
+  compile('com.mikepenz:materialdrawer:5.0.9@aar') {
+    transitive = true
+  }
 
   compile 'de.hdodenhof:circleimageview:2.0.0'
   compile('com.mikepenz:materialize:0.8.2@aar') {

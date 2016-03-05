@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.login;
+package com.alorma.travis.ui.presenter.accounts;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -9,6 +9,7 @@ import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.login.CredentialsDataSource;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 
 public class AccountsCredentialsDatasource implements CredentialsDataSource {
 
@@ -28,6 +29,21 @@ public class AccountsCredentialsDatasource implements CredentialsDataSource {
       credentials.add(mapCredential(account));
     }
     return credentials;
+  }
+
+  @Override
+  public Observable<List<Credential>> getCredentialsObs() {
+    return Observable.create(subscriber -> {
+      if (!subscriber.isUnsubscribed()) {
+        try {
+          subscriber.onStart();
+          subscriber.onNext(getCredentials());
+          subscriber.onCompleted();
+        } catch (Exception e) {
+          subscriber.onError(e);
+        }
+      }
+    });
   }
 
   private Credential mapCredential(Account account) {
