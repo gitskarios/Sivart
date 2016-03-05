@@ -29,32 +29,7 @@ public class AccountsPresenter extends RepositoriesPresenter {
   }
 
   public void start() {
-
-    setupGithubToken(credential.getGithubToken());
-    setupGithubUrl(credential.getGithubUrl());
-
-    subscriptionUser = getUserCredentials().subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(user -> {
-          accountsPresenterCallback.userLoaded(user);
-        }, Throwable::printStackTrace);
-
-    subscriptionOrgs = loadOrganizations().subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .toList()
-        .doOnSubscribe(() -> accountsPresenterCallback.willLoadOrganizations())
-        .doOnCompleted(() -> accountsPresenterCallback.didLoadOrganizations())
-        .subscribe(orgs -> {
-          accountsPresenterCallback.organizationsLoaded(orgs);
-        }, Throwable::printStackTrace);
-  }
-
-  @NonNull
-  private Observable<User> getUserCredentials() {
-    return new RequestUserClient(credential.getName()).observable()
-        .doOnError(throwable -> {
-
-        });
+    Observable.concat(getUserCredentials(), loadOrganizations());
   }
 
   private Observable<Organization> loadOrganizations() {
@@ -66,6 +41,14 @@ public class AccountsPresenter extends RepositoriesPresenter {
         .flatMap(Observable::from);
   }
 
+
+  @NonNull
+  private Observable<User> getUserCredentials() {
+    return new RequestUserClient(credential.getName()).observable()
+        .doOnError(throwable -> {
+
+        });
+  }
   public void setAccountsCallback(AccountsPresenterCallback accountsPresenterCallback) {
     this.accountsPresenterCallback = accountsPresenterCallback;
   }

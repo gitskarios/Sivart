@@ -1,17 +1,14 @@
-package com.alorma.travisdk.interactor.accounts;
+package com.alorma.travisdk.interactor.credentials;
 
 import com.alorma.travisdk.bean.utils.Credential;
-import com.alorma.travisdk.datasource.accounts.ActiveCredentialDataSource;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 public class ActiveCredentialRepositoryImplTest {
 

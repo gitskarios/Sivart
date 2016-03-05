@@ -1,4 +1,4 @@
-package com.alorma.travisdk.interactor.accounts;
+package com.alorma.travisdk.interactor.credentials;
 
 import com.alorma.travisdk.bean.utils.Credential;
 import java.util.List;

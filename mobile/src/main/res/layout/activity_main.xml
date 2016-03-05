@@ -10,6 +10,7 @@
       android:layout_height="?attr/actionBarSize"
       android:layout_width="match_parent"
       android:background="?colorPrimary"
+      android:elevation="8dp"
       />
 
 </LinearLayout>

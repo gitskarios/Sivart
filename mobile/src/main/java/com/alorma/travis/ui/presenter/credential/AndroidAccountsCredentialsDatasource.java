@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.accounts;
+package com.alorma.travis.ui.presenter.credential;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
 
-public class AccountsCredentialsDatasource implements CredentialsDataSource {
+public class AndroidAccountsCredentialsDatasource implements CredentialsDataSource {
 
   private final String accountType;
   private AccountManager accountManager;
 
-  public AccountsCredentialsDatasource(Context context) {
+  public AndroidAccountsCredentialsDatasource(Context context) {
     this.accountManager = AccountManager.get(context);
     accountType = context.getString(R.string.account_type);
   }

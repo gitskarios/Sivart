@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.accounts;
+package com.alorma.travis.ui.presenter.credential;
 
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.request.GithubTokenRequest;

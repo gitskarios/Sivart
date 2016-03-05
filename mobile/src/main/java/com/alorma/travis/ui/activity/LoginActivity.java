@@ -13,10 +13,10 @@ import butterknife.ButterKnife;
 import com.alorma.github.sdk.bean.dto.response.User;
 import com.alorma.travis.R;
 import com.alorma.travis.ui.adapter.CredentialsAdapter;
-import com.alorma.travis.ui.presenter.accounts.LoginPresenter;
+import com.alorma.travis.ui.presenter.credential.LoginPresenter;
 import com.alorma.travisdk.bean.utils.Credential;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import java.util.List;
 
 public class LoginActivity extends BaseActivity implements LoginPresenter.LoginPresenterCallback,

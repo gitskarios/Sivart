@@ -2,8 +2,8 @@ package com.alorma.travisdk.interactor.logs;
 
 import com.alorma.travisdk.bean.response.TravisLogResponse;
 import com.alorma.travisdk.bean.utils.Credential;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.repository.logs.GetLogRepository;
 import org.junit.Before;
 import org.junit.Test;

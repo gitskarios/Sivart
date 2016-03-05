@@ -7,6 +7,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
 import com.alorma.travis.ui.presenter.accounts.CredentialsPresenter;
+import com.alorma.travisdk.bean.response.GithubAccount;
 import com.alorma.travisdk.bean.utils.Credential;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -14,6 +15,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import java.util.List;
+import java.util.Map;
 import se.emilsjolander.intentbuilder.IntentBuilder;
 
 @IntentBuilder public class MainActivity extends BaseActivity
@@ -70,11 +72,12 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
   }
 
   @Override
-  public void showListCredentials(List<Credential> credentials) {
-    for (Credential credential : credentials) {
+  public void showListCredentials(Map<Credential, List<GithubAccount>> credentials) {
+    for (Credential credential : credentials.keySet()) {
       ProfileDrawerItem profile = new ProfileDrawerItem();
       profile.withName(credential.getName());
       profile.withIcon(credential.getAvatar());
+      profile.withEmail(credentials.get(credential).size() + " accounts");
       accountHeader.addProfiles(profile);
     }
   }

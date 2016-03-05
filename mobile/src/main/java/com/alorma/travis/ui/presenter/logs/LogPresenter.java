@@ -5,7 +5,7 @@ import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.response.TravisJobResponse;
 import com.alorma.travisdk.datasource.logs.GetLogDataSource;
 import com.alorma.travisdk.datasource.logs.cache.CacheGetLogDataSource;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.logs.GetJobLogInteractorImpl;
 import com.alorma.travisdk.repository.logs.GetLogRepository;
 import com.alorma.travisdk.repository.logs.GetLogRepositoryImpl;
