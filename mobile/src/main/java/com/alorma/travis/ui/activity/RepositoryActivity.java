@@ -15,9 +15,8 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
-import com.alorma.travis.ui.fragment.build.TravisBuildDetailFragment;
+import com.alorma.travis.ui.fragment.builds.TravisBuildDetailFragment;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
-import com.alorma.travisdk.bean.utils.Credential;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import se.emilsjolander.intentbuilder.Extra;
@@ -25,7 +24,6 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
 @IntentBuilder public class RepositoryActivity extends AppCompatActivity {
 
-  @Extra Credential credential;
   @Extra RepositoryResponse repository;
 
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -53,7 +51,7 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
     setTitle(repository.getRepo());
 
-    pager.setAdapter(new FragmentsAdapter(getSupportFragmentManager(), credential, repository));
+    pager.setAdapter(new FragmentsAdapter(getSupportFragmentManager(), repository));
     tabLayout.setupWithViewPager(pager);
   }
 
@@ -75,12 +73,10 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
     private final Bundle args;
 
-    public FragmentsAdapter(FragmentManager fm, Credential credential,
-        RepositoryResponse repositoryResponse) {
+    public FragmentsAdapter(FragmentManager fm, RepositoryResponse repositoryResponse) {
       super(fm);
 
       args = new Bundle();
-      args.putParcelable(Credential.class.getSimpleName(), credential);
       args.putParcelable(RepositoryResponse.class.getSimpleName(), repositoryResponse);
     }
 

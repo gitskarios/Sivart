@@ -2,13 +2,18 @@ package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.bean.response.TravisBuildResponse;
+import com.alorma.travisdk.bean.utils.Credential;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Observable;
+import rx.observers.TestSubscriber;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class GetBuildInteractorImplTest {
@@ -24,45 +29,61 @@ public class GetBuildInteractorImplTest {
   private int NEGATIVE_BUILD_ID = -1;
   private int ZERO_BUILD_ID = 0;
   private int BUILD_ID = 23436881;
+  private TestSubscriber<TravisBuild> testSubscriber;
+  private ActiveCredentialRepository activeCredentialRepository;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     MockitoAnnotations.initMocks(this);
 
-    interactor = new GetBuildInteractorImpl(buildRepository);
-  }
+    activeCredentialRepository = spy(ActiveCredentialRepositoryImpl.getInstance());
 
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowException_whenNegativelRepoIdIsPassed() throws Exception {
-    interactor.get(REPO_NEGATIVE_ID, BUILD_ID);
-  }
+    interactor = new GetBuildInteractorImpl(buildRepository, activeCredentialRepository);
 
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowException_whenZeroRepoIdIsPassed() throws Exception {
-    interactor.get(REPO_ZERO_ID, BUILD_ID);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowException_whenNegativelBuildIdIsPassed() throws Exception {
-    interactor.get(REPO_ID, NEGATIVE_BUILD_ID);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowException_whenZeroBuildIdIsPassed() throws Exception {
-    interactor.get(REPO_ID, ZERO_BUILD_ID);
+    testSubscriber = new TestSubscriber<>();
   }
 
   @Test
-  public void shouldGetTravisBuild_whenEmptyBuildIdIsPassed() throws Exception {
+  public void shouldThrowException_whenNegativelRepoIdIsPassed() {
+    Observable<TravisBuild> observable = interactor.get(REPO_NEGATIVE_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
+    testSubscriber.assertError(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void shouldThrowException_whenZeroRepoIdIsPassed() {
+    Observable<TravisBuild> observable = interactor.get(REPO_ZERO_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
+    testSubscriber.assertError(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void shouldThrowException_whenNegativelBuildIdIsPassed() {
+    Observable<TravisBuild> observable = interactor.get(REPO_ID, NEGATIVE_BUILD_ID);
+    observable.subscribe(testSubscriber);
+    testSubscriber.assertError(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void shouldThrowException_whenZeroBuildIdIsPassed() {
+    Observable<TravisBuild> observable = interactor.get(REPO_ID, ZERO_BUILD_ID);
+    observable.subscribe(testSubscriber);
+    testSubscriber.assertError(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void shouldGetTravisBuild_whenEmptyBuildIdIsPassed() {
     TravisBuild travisBuild = new TravisBuild();
     travisBuild.setBuild(new TravisBuildResponse());
     travisBuild.getBuild().setId(BUILD_ID);
 
-    when(buildRepository.get(REPO_ID, BUILD_ID)).thenReturn(travisBuild);
+    activeCredentialRepository.set(new Credential());
 
-    TravisBuild travisBuildReceived = interactor.get(REPO_ID, BUILD_ID);
+    when(buildRepository.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(travisBuild));
 
-    assertThat(travisBuildReceived).isEqualTo(travisBuild);
-    assertThat(travisBuildReceived.getBuild().getId()).isEqualTo(travisBuild.getBuild().getId());
+    Observable<TravisBuild> observable = interactor.get(REPO_ID, BUILD_ID);
+    observable.subscribe(testSubscriber);
+
+    testSubscriber.assertValue(travisBuild);
   }
 }

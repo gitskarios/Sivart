@@ -1,7 +1,8 @@
 package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
+import rx.Observable;
 
 public interface GetBuildInteractor {
-  TravisBuild get(long repoId, long buildId) throws Exception;
+  Observable<TravisBuild> get(long repoId, long buildId);
 }

@@ -7,7 +7,7 @@ import com.alorma.travis.ui.holder.string.StringHolder;
 public class BuildInfo {
   private DrawableHolder drawableHolder;
   private StringHolder title = new NullableStringHolder();
-  private StringHolder value = new NullableStringHolder();;
+  private StringHolder value = new NullableStringHolder();
 
   public DrawableHolder getDrawableHolder() {
     return drawableHolder;

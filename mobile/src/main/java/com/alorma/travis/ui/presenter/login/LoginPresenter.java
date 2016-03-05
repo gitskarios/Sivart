@@ -78,15 +78,27 @@ public class LoginPresenter extends BasePresenter {
   public void githubLogin(String ghToken, String url) {
     GetAuthUserClient authUserClient = new GetAuthUserClient(ghToken);
     Observable<User> userObservable = authUserClient.observable()
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread());
 
     userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
-      confirmLogin(ghToken, url);
+      confirmLogin(ghToken, url, null);
     }, Throwable::printStackTrace);
   }
 
-  public void confirmLogin(String ghToken, String url) {
+  public void githubLoginEnterprise(String ghToken, String url, String enterpriseUrl) {
+    setupGithubUrl(enterpriseUrl);
+    GetAuthUserClient authUserClient = new GetAuthUserClient(ghToken);
+    Observable<User> userObservable = authUserClient.observable()
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread());
+
+    userObservable.doOnNext(user1 -> this.githubUser = user1).subscribe(user -> {
+      confirmLogin(ghToken, url, enterpriseUrl);
+    }, Throwable::printStackTrace);
+  }
+
+  public void confirmLogin(String ghToken, String url, String githubUrl) {
     RetrofitWrapper retrofitWrapper = new RetrofitWrapper();
     CredentialsDataSource apiDatasource = new ApiCredentialsDataSource(retrofitWrapper);
     AuthenticationRepository authenticationRepository =
@@ -99,7 +111,8 @@ public class LoginPresenter extends BasePresenter {
         subscriber.onStart();
         Credential credential = new Credential();
         credential.setGithubToken(ghToken);
-        credential.setUrl(url);
+        credential.setTravisUrl(url);
+        credential.setGithubUrl(githubUrl);
         credential.setName(githubUser.login);
         credential.setAvatar(githubUser.avatar_url);
 
@@ -112,7 +125,7 @@ public class LoginPresenter extends BasePresenter {
       }
     });
 
-    observable.subscribeOn(Schedulers.io())
+    observable.subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(credential -> start())
         .subscribe(credential1 -> {

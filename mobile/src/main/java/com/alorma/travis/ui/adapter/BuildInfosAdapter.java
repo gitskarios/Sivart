@@ -13,13 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.alorma.travis.R;
+import com.alorma.travisdk.bean.response.TravisJobResponse;
 
 public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.InfoHolder> {
+
+  private static final int JOB_VIEW_TYPE = 1;
+  private static final int INFO_VIEW_TYPE = 0;
+
+  private BuildInfoCallback buildInfoCallback;
 
   @Override
   public InfoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+
+    int layout = android.R.layout.simple_list_item_1;
+    if (viewType == JOB_VIEW_TYPE) {
+      layout = R.layout.row_job_build_info;
+    }
+
+    View v = inflater.inflate(layout, parent, false);
     return new InfoHolder(v);
   }
 
@@ -36,12 +48,18 @@ public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.
     holder.text.setText(spannableString);
   }
 
-  @NonNull
   private SpannableString getSpannableString(BuildInfo info) {
-    String text = new StringBuilder().append(info.getTitle().get())
-        .append(": ")
-        .append(info.getValue().get())
-        .toString();
+    if (info instanceof JobBuildInfo) {
+      return getJobBuildInfoSpannableString((JobBuildInfo) info);
+    }
+    return getBuildInfoSpannableString(info);
+  }
+
+  @NonNull
+  private SpannableString getBuildInfoSpannableString(BuildInfo info) {
+    String text = info.getTitle().get() +
+        ": " +
+        info.getValue().get();
 
     SpannableString spannableString = new SpannableString(text);
     spannableString.setSpan(new ForegroundColorSpan(Color.DKGRAY), 0,
@@ -54,12 +72,47 @@ public class BuildInfosAdapter extends BaseAdapter<BuildInfo, BuildInfosAdapter.
     return spannableString;
   }
 
+  @NonNull
+  private SpannableString getJobBuildInfoSpannableString(JobBuildInfo info) {
+    String text = info.getTitle().get();
+
+    SpannableString spannableString = new SpannableString(text);
+    spannableString.setSpan(new ForegroundColorSpan(Color.DKGRAY), 0,
+        info.getTitle().get().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spannableString;
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    if (get(position) instanceof JobBuildInfo) {
+      return JOB_VIEW_TYPE;
+    }
+    return INFO_VIEW_TYPE;
+  }
+
+  public void setBuildInfoCallback(BuildInfoCallback buildInfoCallback) {
+    this.buildInfoCallback = buildInfoCallback;
+  }
+
   public class InfoHolder extends RecyclerView.ViewHolder {
     private final TextView text;
 
     public InfoHolder(View itemView) {
       super(itemView);
       text = (TextView) itemView.findViewById(android.R.id.text1);
+      text.setOnClickListener(v -> {
+        BuildInfo buildInfo = get(getAdapterPosition());
+        if (buildInfo instanceof JobBuildInfo) {
+          if (buildInfoCallback != null) {
+            buildInfoCallback.onJobSelected(((JobBuildInfo) buildInfo).getJob());
+          }
+        }
+      });
     }
+  }
+
+  public interface BuildInfoCallback {
+    void onJobSelected(TravisJobResponse jobResponse);
   }
 }

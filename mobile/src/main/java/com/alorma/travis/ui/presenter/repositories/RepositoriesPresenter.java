@@ -4,14 +4,13 @@ import com.alorma.travis.ui.presenter.BasePresenter;
 import com.alorma.travis.ui.presenter.overview.ApiTravisRepositoriesDataSource;
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
-import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.repos.TravisRepositoriesDataSource;
 import com.alorma.travisdk.datasource.repos.cache.CacheTravisRepositoriesDataSource;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.repos.GetTravisRepositoriesInteractorImpl;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepository;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepositoryImpl;
 import java.util.List;
-import java.util.Map;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,55 +22,36 @@ public class RepositoriesPresenter extends BasePresenter {
       new RepositoriesPresenterCallback.NullView();
   private RepositoriesPresenterCallback overviewPresenterCallback = overviewPresenterCallbackNull;
 
-  private Credential credential;
   private Subscription subscription;
 
-  public RepositoriesPresenter(Credential credential) {
-    this.credential = credential;
+  public RepositoriesPresenter() {
+
   }
 
   public void loadRepositories(String name) {
-    subscription = loadRepositories(name, credential.getUrl()).observeOn(
-        AndroidSchedulers.mainThread())
-        .doOnSubscribe(() -> overviewPresenterCallback.willLoadRepositories())
-        .doOnCompleted(() -> overviewPresenterCallback.didLoadRepositories())
-        .subscribe(list -> {
-          overviewPresenterCallback.repositoriesLoaded(list);
-        }, Throwable::printStackTrace);
+    subscription =
+        createLoader(name).observeOn(
+            AndroidSchedulers.mainThread())
+            .doOnSubscribe(() -> overviewPresenterCallback.willLoadRepositories())
+            .doOnCompleted(() -> overviewPresenterCallback.didLoadRepositories())
+            .subscribe(list -> {
+              overviewPresenterCallback.repositoriesLoaded(list);
+            }, Throwable::printStackTrace);
   }
 
-  private Observable<List<RepositoryResponse>> loadRepositories(
-      String owner, String url) {
+  private Observable<List<RepositoryResponse>> createLoader(String owner) {
     TravisRepositoriesDataSource cache = new CacheTravisRepositoriesDataSource();
     TravisRepositoriesDataSource api =
-        new ApiTravisRepositoriesDataSource(new RetrofitWrapper(), url);
+        new ApiTravisRepositoriesDataSource(new RetrofitWrapper());
 
     TravisRepositoriesRepository travisRepository =
         new TravisRepositoriesRepositoryImpl(cache, api);
 
     GetTravisRepositoriesInteractorImpl travisRepositoriesInteractor =
-        new GetTravisRepositoriesInteractorImpl(travisRepository);
+        new GetTravisRepositoriesInteractorImpl(travisRepository,
+            ActiveCredentialRepositoryImpl.getInstance());
 
-    Observable<List<RepositoryResponse>> listObservable = Observable.create(
-        (Observable.OnSubscribe<List<RepositoryResponse>>) subscriber -> {
-          if (!subscriber.isUnsubscribed()) {
-            subscriber.onStart();
-
-            try {
-              List<RepositoryResponse> repos =
-                  travisRepositoriesInteractor.getRepos(owner, true);
-
-              subscriber.onNext(repos);
-              subscriber.onCompleted();
-            } catch (Exception e) {
-              subscriber.onError(e);
-            }
-          }
-        });
-
-    listObservable = listObservable.subscribeOn(Schedulers.newThread());
-
-    return listObservable;
+    return travisRepositoriesInteractor.getRepos(owner, true).subscribeOn(Schedulers.newThread());
   }
 
   public void setRepositoriesCallback(RepositoriesPresenterCallback overviewPresenterCallback) {

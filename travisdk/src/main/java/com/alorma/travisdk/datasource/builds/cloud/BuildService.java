@@ -7,10 +7,10 @@ import retrofit2.http.Path;
 
 public interface BuildService {
 
-  @GET("/builds/{build_id}")
+  @GET("builds/{build_id}")
   Call<TravisBuild> getBuild(@Path("build_id") long buildId);
 
-  @GET("/repos/{repository_id}/builds/{build_id}")
+  @GET("repos/{repository_id}/builds/{build_id}")
   Call<TravisBuild> getBuildWithRepoId(@Path("repository_id") long repositoryId,
       @Path("build_id") long buildId);
 }

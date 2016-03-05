@@ -7,7 +7,8 @@ public class Credential implements Parcelable {
   private String name;
   private String token;
   private String githubToken;
-  private String url;
+  private String travisUrl;
+  private String githubUrl;
   private String avatar;
 
   public String getName() {
@@ -26,12 +27,20 @@ public class Credential implements Parcelable {
     this.token = token;
   }
 
-  public String getUrl() {
-    return url;
+  public String getTravisUrl() {
+    return travisUrl;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setTravisUrl(String travisUrl) {
+    this.travisUrl = travisUrl;
+  }
+
+  public String getGithubUrl() {
+    return githubUrl;
+  }
+
+  public void setGithubUrl(String githubUrl) {
+    this.githubUrl = githubUrl;
   }
 
   public String getAvatar() {
@@ -48,7 +57,8 @@ public class Credential implements Parcelable {
         "name='" + name + '\'' +
         ", token='" + token + '\'' +
         ", githubToken='" + githubToken + '\'' +
-        ", url='" + url + '\'' +
+        ", travisUrl='" + travisUrl + '\'' +
+        ", githubUrl='" + githubUrl + '\'' +
         ", avatar='" + avatar + '\'' +
         '}';
   }
@@ -71,7 +81,8 @@ public class Credential implements Parcelable {
     dest.writeString(this.name);
     dest.writeString(this.token);
     dest.writeString(this.githubToken);
-    dest.writeString(this.url);
+    dest.writeString(this.travisUrl);
+    dest.writeString(this.githubUrl);
     dest.writeString(this.avatar);
   }
 
@@ -82,7 +93,8 @@ public class Credential implements Parcelable {
     this.name = in.readString();
     this.token = in.readString();
     this.githubToken = in.readString();
-    this.url = in.readString();
+    this.travisUrl = in.readString();
+    this.githubUrl = in.readString();
     this.avatar = in.readString();
   }
 

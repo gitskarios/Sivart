@@ -20,7 +20,7 @@ public class RepositoryResponse implements Parcelable {
 
   }
 
-  @SerializedName("last_build_state") public String lastBuildState;
+  @SerializedName("last_build_state") @RepositoryResponse.State public String lastBuildState;
   @SerializedName("last_build_started_at") public Date lastBuildStarted;
   @SerializedName("last_build_finished_at") public Date lastBuildFinished;
   @SerializedName("github_language") public String githubLanguage;

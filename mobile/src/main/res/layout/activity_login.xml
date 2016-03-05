@@ -20,7 +20,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Travis url"
+        android:hint="Travis travisUrl"
         android:text="https://api.travis-ci.org"
         android:id="@+id/travis_url"
         />
@@ -44,6 +44,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/gh_login"
         android:text="GH Login"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="https://api.travis-ci.org"
+        android:id="@+id/github_enterprise_url"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gh_en_login"
+        android:text="GH Enterprise Login"
         />
   </LinearLayout>
   <android.support.v7.widget.RecyclerView
