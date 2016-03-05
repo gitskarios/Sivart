@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class GetBuildInteractorImplTest {
@@ -36,7 +35,7 @@ public class GetBuildInteractorImplTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
 
-    activeCredentialRepository = spy(ActiveCredentialRepositoryImpl.getInstance());
+    activeCredentialRepository = ActiveCredentialRepositoryImpl.getInstance();
 
     interactor = new GetBuildInteractorImpl(buildRepository, activeCredentialRepository);
 

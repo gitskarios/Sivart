@@ -22,7 +22,7 @@ public class TravisRepositoriesRepositoryImpl implements TravisRepositoriesRepos
     Observable<List<RepositoryResponse>> cache = cacheDatasource.getRepos(owner, active);
     Observable<List<RepositoryResponse>> api = apiDatasource.getRepos(owner, active)
         .doOnNext(responses -> cacheDatasource.save(owner, responses));
-    return Observable.concat(cache, api).filter(responses -> responses != null);
+    return Observable.concat(cache, api).filter(responses -> responses != null && !responses.isEmpty());
   }
 
   @Override

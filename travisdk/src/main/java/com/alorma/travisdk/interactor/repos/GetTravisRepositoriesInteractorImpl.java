@@ -22,8 +22,7 @@ public class GetTravisRepositoriesInteractorImpl implements ReposInteractor {
   public Observable<List<RepositoryResponse>> getRepos(String owner, boolean active) {
     return credentialRepository.getCredential().flatMap(credential -> {
       travisRepositoriesRepository.setCredential(credential);
-      return travisRepositoriesRepository.getRepos(owner, active)
-          .startWith(Collections.<RepositoryResponse>emptyList());
+      return travisRepositoriesRepository.getRepos(owner, active);
     });
   }
 }

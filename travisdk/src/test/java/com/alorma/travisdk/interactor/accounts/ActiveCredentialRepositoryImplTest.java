@@ -21,11 +21,14 @@ public class ActiveCredentialRepositoryImplTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    repository = ActiveCredentialRepositoryImpl.getInstance();
+    repository = spy(ActiveCredentialRepositoryImpl.getInstance());
   }
 
   @Test(expected = IllegalStateException.class)
   public void ShouldThrowException_whenNoCredential() {
+
+    repository.set(null);
+
     repository.get();
   }
 
@@ -41,6 +44,7 @@ public class ActiveCredentialRepositoryImplTest {
 
   @Test
   public void ShouldThrowExceptionOnError_whenNoCredential() {
+    repository.set(null);
     Observable<Credential> observable = repository.getCredential();
     TestSubscriber<Credential> testSubscriber = new TestSubscriber<>();
 
