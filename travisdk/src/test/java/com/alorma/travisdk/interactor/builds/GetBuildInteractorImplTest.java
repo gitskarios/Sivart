@@ -2,6 +2,9 @@ package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.bean.response.TravisBuildResponse;
+import com.alorma.travisdk.bean.utils.Credential;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class GetBuildInteractorImplTest {
@@ -26,12 +30,15 @@ public class GetBuildInteractorImplTest {
   private int ZERO_BUILD_ID = 0;
   private int BUILD_ID = 23436881;
   private TestSubscriber<TravisBuild> testSubscriber;
+  private ActiveCredentialRepository activeCredentialRepository;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
 
-    interactor = new GetBuildInteractorImpl(buildRepository);
+    activeCredentialRepository = spy(ActiveCredentialRepositoryImpl.getInstance());
+
+    interactor = new GetBuildInteractorImpl(buildRepository, activeCredentialRepository);
 
     testSubscriber = new TestSubscriber<>();
   }
@@ -69,6 +76,8 @@ public class GetBuildInteractorImplTest {
     TravisBuild travisBuild = new TravisBuild();
     travisBuild.setBuild(new TravisBuildResponse());
     travisBuild.getBuild().setId(BUILD_ID);
+
+    activeCredentialRepository.set(new Credential());
 
     when(buildRepository.get(REPO_ID, BUILD_ID)).thenReturn(Observable.just(travisBuild));
 
