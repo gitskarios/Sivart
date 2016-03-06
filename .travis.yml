@@ -2,6 +2,8 @@ language: android
 branches:
   only:
   - develop
+  - /^release-.*$/
+  - /^v\.\d\.\d\.\d$/
 cache:
   directories:
   - $HOME/.m2
