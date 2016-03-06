@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".ui.activity.LoginActivity"
+    android:background="@color/colorPrimary"
     >
+
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       android:id="@+id/login_form"
+      android:layout_gravity="center"
+      android:padding="16dp"
       >
     <EditText
         android:layout_width="match_parent"
@@ -23,33 +23,41 @@
         android:hint="Travis travisUrl"
         android:text="https://api.travis-ci.org"
         android:id="@+id/travis_url"
+        android:visibility="gone"
         />
 
-    <TextView
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Github username"
-        android:id="@+id/github_username"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Github token"
-        android:id="@+id/github_token"
-        />
+        android:textColor="@color/md_white_1000"
+        android:textColorHint="@color/md_white_1000"
+        >
+      <EditText
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Github token"
+          android:id="@+id/github_token"
+          android:textColor="@color/md_white_1000"
+          android:textColorHint="@color/md_white_1000"
+          />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gh_login"
-        android:text="GH Login"
+        android:layout_marginTop="16dp"
+        android:text="Authenticate"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="https://api.travis-ci.org"
+        android:layout_marginTop="8dp"
+        android:hint="https://api.github.com"
+        android:visibility="gone"
         android:id="@+id/github_enterprise_url"
         />
 
@@ -57,13 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gh_en_login"
+        android:visibility="gone"
         android:text="GH Enterprise Login"
         />
   </LinearLayout>
-  <android.support.v7.widget.RecyclerView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/credentials_list"
-      android:visibility="gone"
-      />
-</LinearLayout>
+</FrameLayout>

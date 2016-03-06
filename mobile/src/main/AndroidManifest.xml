@@ -15,7 +15,10 @@
       android:theme="@style/AppTheme"
       android:name=".TravisApplication"
       >
-    <activity android:name=".ui.activity.LoginActivity">
+    <activity
+        android:name=".ui.activity.LoginActivity"
+        android:theme="@style/AppTheme.NoBar"
+        >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
