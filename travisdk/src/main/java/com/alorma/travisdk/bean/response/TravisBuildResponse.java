@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Arrays;
 
 public class TravisBuildResponse {
-  @SerializedName("commit_id") private long commmitId;
+  @SerializedName("commit_id") private long commitId;
   private TravisConfig config;
   private long duration;
 
@@ -21,7 +21,7 @@ public class TravisBuildResponse {
 
   @SerializedName("pull_request_title") private String pullRequestTitle;
 
-  @SerializedName("repository_id") private String repoId;
+  @SerializedName("repository_id") private long repoId;
 
   @SerializedName("started_at") private String startedAt;
 
@@ -36,12 +36,14 @@ public class TravisBuildResponse {
 
   @State private String state;
 
-  public long getCommmitId() {
-    return commmitId;
+  private TravisCommitResponse commit;
+
+  public long getCommitId() {
+    return commitId;
   }
 
-  public void setCommmitId(long commmitId) {
-    this.commmitId = commmitId;
+  public void setCommitId(long commitId) {
+    this.commitId = commitId;
   }
 
   public TravisConfig getConfig() {
@@ -116,11 +118,11 @@ public class TravisBuildResponse {
     this.pullRequestTitle = pullRequestTitle;
   }
 
-  public String getRepoId() {
+  public long getRepoId() {
     return repoId;
   }
 
-  public void setRepoId(String repoId) {
+  public void setRepoId(long repoId) {
     this.repoId = repoId;
   }
 
@@ -141,10 +143,18 @@ public class TravisBuildResponse {
     this.state = state;
   }
 
+  public TravisCommitResponse getCommit() {
+    return commit;
+  }
+
+  public void setCommit(TravisCommitResponse commit) {
+    this.commit = commit;
+  }
+
   @Override
   public String toString() {
     return "TravisBuildResponse{" +
-        "commmitId=" + commmitId +
+        "commitId=" + commitId +
         ", config=" + config +
         ", duration=" + duration +
         ", finishedAt='" + finishedAt + '\'' +
