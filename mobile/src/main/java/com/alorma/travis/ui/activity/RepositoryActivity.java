@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
 import com.alorma.travis.ui.fragment.builds.TravisBuildDetailFragment;
+import com.alorma.travis.ui.fragment.builds.TravisBuildsListFragment;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -86,6 +87,11 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
         TravisBuildDetailFragment fragment = new TravisBuildDetailFragment();
         fragment.setArguments(args);
         return fragment;
+      } else if (position == 1) {
+        TravisBuildsListFragment fragment = new TravisBuildsListFragment();
+        fragment.setArguments(args);
+        return fragment;
+
       }
       return new ListFragment();
     }
