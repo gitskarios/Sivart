@@ -80,7 +80,7 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
       args = new Bundle();
       args.putLong(Enumerators.Keys.Repository.EXTRA_REPO_ID, repositoryResponse.getId());
-      args.putLong(Enumerators.Keys.Repository.EXTRA_REPO_ID, repositoryResponse.getLastBuildId());
+      args.putLong(Enumerators.Keys.Repository.EXTRA_BUILD_ID, repositoryResponse.getLastBuildId());
       args.putString(Enumerators.Keys.Repository.EXTRA_OWNER, repositoryResponse.getOwner());
       args.putString(Enumerators.Keys.Repository.EXTRA_NAME, repositoryResponse.getRepo());
     }
