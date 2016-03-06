@@ -78,6 +78,8 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
 
   @Override
   public void showListCredentials(Map<Credential, List<GithubAccount>> credentials) {
+    accountHeader.clear();
+    drawer.removeAllItems();
     for (Credential credential : credentials.keySet()) {
       ProfileDrawerItem profile = new ProfileDrawerItem();
       profile.withName(credential.getName());
