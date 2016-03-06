@@ -3,6 +3,7 @@ package com.alorma.travis.ui.fragment.builds;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
+import com.alorma.travis.ui.Enumerators;
 import com.alorma.travis.ui.activity.TravisJobActivityIntentBuilder;
 import com.alorma.travis.ui.adapter.BuildInfo;
 import com.alorma.travis.ui.adapter.BuildInfosAdapter;
@@ -23,7 +25,6 @@ import com.alorma.travis.ui.holder.drawable.IconicDrawableHolder;
 import com.alorma.travis.ui.holder.string.LongStringPrimaryHolder;
 import com.alorma.travis.ui.holder.string.StringPrimaryHolder;
 import com.alorma.travis.ui.presenter.builds.LastBuildPresenter;
-import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.bean.response.TravisJobResponse;
 import com.mikepenz.iconics.typeface.IIcon;
@@ -34,7 +35,8 @@ import java.util.List;
 public class TravisBuildDetailFragment extends Fragment
     implements LastBuildPresenter.LastBuildCallback, BuildInfosAdapter.BuildInfoCallback {
 
-  private RepositoryResponse repositoryResponse;
+  private long repoId;
+  private long buildId;
   private LastBuildPresenter presenter;
 
   @Bind(R.id.travisBuildStates) RecyclerView travisStates;
@@ -69,9 +71,7 @@ public class TravisBuildDetailFragment extends Fragment
     super.onStart();
 
     presenter.setLastBuildCallback(this);
-    if (repositoryResponse != null) {
-      presenter.start(repositoryResponse);
-    }
+    presenter.start(repoId, buildId);
   }
 
   @Override
@@ -82,7 +82,8 @@ public class TravisBuildDetailFragment extends Fragment
 
   private void readArguments() {
     if (getArguments() != null) {
-      repositoryResponse = getArguments().getParcelable(RepositoryResponse.class.getSimpleName());
+      repoId = getArguments().getLong(Enumerators.Keys.Repository.EXTRA_REPO_ID);
+      buildId = getArguments().getLong(Enumerators.Keys.Repository.EXTRA_BUILD_ID);
     }
   }
 
@@ -152,10 +153,13 @@ public class TravisBuildDetailFragment extends Fragment
     }
   }
 
+  @ColorInt
   private int getColorFromState(TravisBuild build) {
     if (build.isBuildOk()) {
       return Color.GREEN;
-    } else if (build.getBuild().getState().equalsIgnoreCase("failed")) {
+    } else if (build.getBuild().getState().equalsIgnoreCase("failed") || build.getBuild()
+        .getState()
+        .equalsIgnoreCase("errored")) {
       return Color.RED;
     } else if (build.getBuild().getState().equalsIgnoreCase("started") || build.getBuild()
         .getState()
@@ -165,10 +169,12 @@ public class TravisBuildDetailFragment extends Fragment
     return Color.DKGRAY;
   }
 
+  @ColorInt
   private int getColorFromState(TravisJobResponse job) {
     if (job.isJobOk()) {
       return Color.GREEN;
-    } else if (job.getState().equalsIgnoreCase("failed")) {
+    } else if (job.getState().equalsIgnoreCase("failed") || job.getState()
+        .equalsIgnoreCase("errored")) {
       return Color.RED;
     } else if (job.getState().equalsIgnoreCase("started") || job.getState()
         .equalsIgnoreCase("created")) {

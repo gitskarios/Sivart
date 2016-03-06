@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
+import com.alorma.travis.ui.Enumerators;
 import com.alorma.travis.ui.fragment.builds.TravisBuildDetailFragment;
+import com.alorma.travis.ui.fragment.builds.TravisBuildsListFragment;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -77,13 +79,20 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
       super(fm);
 
       args = new Bundle();
-      args.putParcelable(RepositoryResponse.class.getSimpleName(), repositoryResponse);
+      args.putLong(Enumerators.Keys.Repository.EXTRA_REPO_ID, repositoryResponse.getId());
+      args.putLong(Enumerators.Keys.Repository.EXTRA_REPO_ID, repositoryResponse.getLastBuildId());
+      args.putString(Enumerators.Keys.Repository.EXTRA_OWNER, repositoryResponse.getOwner());
+      args.putString(Enumerators.Keys.Repository.EXTRA_NAME, repositoryResponse.getRepo());
     }
 
     @Override
     public Fragment getItem(int position) {
       if (position == 0) {
         TravisBuildDetailFragment fragment = new TravisBuildDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+      } else if (position == 1) {
+        TravisBuildsListFragment fragment = new TravisBuildsListFragment();
         fragment.setArguments(args);
         return fragment;
       }
