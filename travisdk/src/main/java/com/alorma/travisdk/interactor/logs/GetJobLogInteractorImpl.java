@@ -1,6 +1,6 @@
 package com.alorma.travisdk.interactor.logs;
 
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
 import com.alorma.travisdk.repository.logs.GetLogRepository;
 import rx.Observable;
 

@@ -2,6 +2,8 @@ package com.alorma.travisdk.repository.auth;
 
 import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.login.CredentialsDataSource;
+import com.alorma.travisdk.repository.credentials.AuthenticationRepository;
+import com.alorma.travisdk.repository.credentials.AuthenticationRepositoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

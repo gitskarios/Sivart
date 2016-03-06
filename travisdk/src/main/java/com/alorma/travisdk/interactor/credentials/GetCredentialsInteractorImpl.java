@@ -1,9 +1,10 @@
-package com.alorma.travisdk.interactor.accounts;
+package com.alorma.travisdk.interactor.credentials;
 
 import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.repository.credentials.CredentialsRepository;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 
 public class GetCredentialsInteractorImpl implements GetCredentialsInteractor {
 
@@ -20,5 +21,10 @@ public class GetCredentialsInteractorImpl implements GetCredentialsInteractor {
       credentials = new ArrayList<>();
     }
     return credentials;
+  }
+
+  @Override
+  public Observable<List<Credential>> getCredentialsObs() {
+    return credentialsRepository.getCredentialsObs();
   }
 }

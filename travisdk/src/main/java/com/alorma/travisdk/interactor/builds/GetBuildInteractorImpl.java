@@ -1,7 +1,7 @@
 package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import rx.Observable;
 

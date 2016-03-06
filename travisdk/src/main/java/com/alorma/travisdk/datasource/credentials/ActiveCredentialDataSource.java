@@ -1,4 +1,4 @@
-package com.alorma.travisdk.datasource.accounts;
+package com.alorma.travisdk.datasource.credentials;
 
 import com.alorma.travisdk.bean.utils.Credential;
 

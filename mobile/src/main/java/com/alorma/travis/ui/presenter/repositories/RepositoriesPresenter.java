@@ -6,7 +6,7 @@ import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.datasource.repos.TravisRepositoriesDataSource;
 import com.alorma.travisdk.datasource.repos.cache.CacheTravisRepositoriesDataSource;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.repos.GetTravisRepositoriesInteractorImpl;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepository;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepositoryImpl;

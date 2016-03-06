@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.login;
+package com.alorma.travis.ui.presenter.credential;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,10 +8,10 @@ import com.alorma.travis.ui.presenter.BasePresenter;
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.login.CredentialsDataSource;
-import com.alorma.travisdk.interactor.accounts.GetCredentialsInteractorImpl;
+import com.alorma.travisdk.interactor.credentials.GetCredentialsInteractorImpl;
 import com.alorma.travisdk.interactor.auth.AuthenticateInteractorImpl;
-import com.alorma.travisdk.repository.auth.AuthenticationRepository;
-import com.alorma.travisdk.repository.auth.AuthenticationRepositoryImpl;
+import com.alorma.travisdk.repository.credentials.AuthenticationRepository;
+import com.alorma.travisdk.repository.credentials.AuthenticationRepositoryImpl;
 import com.alorma.travisdk.repository.credentials.CredentialsRepositoryImpl;
 import java.util.List;
 import rx.Observable;
@@ -29,7 +29,7 @@ public class LoginPresenter extends BasePresenter {
   private User githubUser;
 
   public LoginPresenter(Context context) {
-    cacheDataSource = new AccountsCredentialsDatasource(context);
+    cacheDataSource = new AndroidAccountsCredentialsDatasource(context);
   }
 
   public void start() {

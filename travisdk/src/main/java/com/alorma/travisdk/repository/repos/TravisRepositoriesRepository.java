@@ -1,7 +1,7 @@
 package com.alorma.travisdk.repository.repos;
 
 import com.alorma.travisdk.bean.response.RepositoryResponse;
-import com.alorma.travisdk.repository.auth.CredentialProvider;
+import com.alorma.travisdk.repository.credentials.CredentialProvider;
 import java.util.List;
 import rx.Observable;
 

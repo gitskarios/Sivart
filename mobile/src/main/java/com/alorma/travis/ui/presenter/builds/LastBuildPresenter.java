@@ -6,7 +6,7 @@ import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.datasource.builds.GetBuildDataSource;
 import com.alorma.travisdk.datasource.builds.cache.CacheGetBuildDataSource;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepositoryImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractor;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractorImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;

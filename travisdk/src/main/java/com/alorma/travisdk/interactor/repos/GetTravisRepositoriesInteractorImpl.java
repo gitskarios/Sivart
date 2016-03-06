@@ -1,9 +1,8 @@
 package com.alorma.travisdk.interactor.repos;
 
 import com.alorma.travisdk.bean.response.RepositoryResponse;
-import com.alorma.travisdk.interactor.accounts.ActiveCredentialRepository;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
 import com.alorma.travisdk.repository.repos.TravisRepositoriesRepository;
-import java.util.Collections;
 import java.util.List;
 import rx.Observable;
 

@@ -1,4 +1,4 @@
-package com.alorma.travisdk.repository.auth;
+package com.alorma.travisdk.repository.credentials;
 
 import com.alorma.travisdk.bean.utils.Credential;
 

@@ -1,4 +1,4 @@
-package com.alorma.travis.ui.presenter.login;
+package com.alorma.travis.ui.presenter.credential;
 
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
 import com.alorma.travisdk.bean.request.GithubTokenRequest;
@@ -6,9 +6,11 @@ import com.alorma.travisdk.bean.response.AccessTokenResponse;
 import com.alorma.travisdk.bean.utils.Credential;
 import com.alorma.travisdk.datasource.login.CredentialsDataSource;
 import com.alorma.travisdk.datasource.login.cloud.AuthService;
+import java.util.Collections;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
+import rx.Observable;
 
 public class ApiCredentialsDataSource implements CredentialsDataSource {
 
@@ -21,7 +23,12 @@ public class ApiCredentialsDataSource implements CredentialsDataSource {
 
   @Override
   public List<Credential> getCredentials() {
-    return null;
+    return Collections.emptyList();
+  }
+
+  @Override
+  public Observable<List<Credential>> getCredentialsObs() {
+    return Observable.empty();
   }
 
   @Override
