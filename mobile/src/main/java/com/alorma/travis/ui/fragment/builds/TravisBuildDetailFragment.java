@@ -144,7 +144,7 @@ public class TravisBuildDetailFragment extends Fragment
             TravisJobResponse job = jobs.get(0);
             JobBuildInfo jobBuild = new JobBuildInfo();
             jobBuild.setDrawableHolder(getIcon(Octicons.Icon.oct_terminal).color(Color.DKGRAY));
-            jobBuild.setTitle(new StringPrimaryHolder("Vew log"));
+            jobBuild.setTitle(new StringPrimaryHolder("View log"));
             jobBuild.setJob(job);
             infos.add(jobBuild);
           } else if (jobs.size() > 1) {
