@@ -3,6 +3,7 @@ package com.alorma.travis.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.view.MenuItem;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +30,10 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
     setContentView(R.layout.activity_job);
     ButterKnife.bind(this);
 
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     LogPresenter logPresenter = new LogPresenter(jobResponse);
     logPresenter.setLogCallback(this);
     logPresenter.start();
@@ -38,6 +43,14 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
   protected void onDestroy() {
     ButterKnife.unbind(this);
     super.onDestroy();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      finish();
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
