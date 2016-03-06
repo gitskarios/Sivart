@@ -1,22 +1,18 @@
 language: android
-
 branches:
   only:
-    - develop
-
+  - develop
 cache:
   directories:
-    - $HOME/.m2
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.gradle/native
-    - $HOME/.gradle/daemon
-    - $HOME/.gradle/caches/jars-1
-    - $HOME/.gradle/caches/2.10
-
+  - $HOME/.m2
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/native
+  - $HOME/.gradle/daemon
+  - $HOME/.gradle/caches/jars-1
+  - $HOME/.gradle/caches/2.10
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 android:
   components:
   - tools
@@ -25,15 +21,19 @@ android:
   - extra-android-m2repository
   licenses:
   - android-sdk-license-.+
-
 env:
   matrix:
-    - COMPILE_METHOD=check
-    - COMPILE_METHOD=assembleDebug
-
-
+  - COMPILE_METHOD=check
+  - COMPILE_METHOD=assembleDebug
 script: ./gradlew $COMPILE_METHOD -PdisablePreDex
-
 notifications:
   slack:
     secure: EzftlFYHtgFuBpRsSleKtsA1PngiK/tKHw8WrFfFU69ehXvvdA1Bi5t+TBn9eFo4E5cRolrPuyMGn8HyMLYn1RFAvr3YcSPIll++92OeyV0C9Opx68aK3iCoIXuasZ0Id3By1mnjefRuQvMQShfHBe/7lbtPvip254H9QX57fl4=
+deploy:
+  provider: releases
+  api_key:
+    secure: gElVmp3PrdtQmcJ1187skpv4olQwgIY9+AXr6sM/5Q8USz1wXepIvmdc/VKqqz+D0oUigfowaUqR10tcEMhjyu47Is0NODBvdRYd654vr0ie/Gt5RLoMEHg8j1OdanaftCgfAlO4ejtCAh/WsyikgDUL3LWes9ks3NkFSP0oW7ESiXx1FCiVbeUdLVWfu9a3Y6+35eg52xCfEf2SzX69StEUvvanRQGf0JCMpEgE6wvMqKjsMXMChuQD/eyLfEkjYNlRwSST7X6T5zHy8T6i5THBQaiZnEwsneTn1K7o6hK72rt5iwD3TUBUQUHytm6ReEwfZLA58x7hAlSbm1iLH0WfiAYVf21TbiFxTCQMy9b2wtTTjKL1PY1cCZ88W6XM6uABGQ79YNFtGRaqA70Zd9T5EoCFKqSJsQVUnPa/U+G4t1MpVviEpqrADpaihrdaLEvY9Zho9TLzjaa6gxDoLXUTxRWYTuaC0tIAKroO35jjcWkZ0CEo8tkXnEuYQBNvHMPDrh06MVFzRIdNlurS8ebM2KF0XtHTCmvBiKuRrrR+njMdGSJ29uEtOoy17qsSbFcCDVnf2XxpElVXx/DM38jNNhpkowSpq/dwW2dJ4c2C+0gpnqyYxAAaEAQp1g4MRj5VamSmP7h2sVHwpCY36UYAFKnjCU72BP6vMn8jN4Y=
+  file: 'mobile/build/outputs/apk/mobile-debug.apk'
+  on:
+    tags: true
+    repo: gitskarios/Sivart
