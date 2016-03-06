@@ -39,3 +39,4 @@ deploy:
   on:
     tags: true
     repo: gitskarios/Sivart
+    condition: $COMPILE_METHOD == 'assembleDebug'
