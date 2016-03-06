@@ -21,7 +21,7 @@ public class TravisBuildResponse {
 
   @SerializedName("pull_request_title") private String pullRequestTitle;
 
-  @SerializedName("repository_id") private String repoId;
+  @SerializedName("repository_id") private long repoId;
 
   @SerializedName("started_at") private String startedAt;
 
@@ -118,11 +118,11 @@ public class TravisBuildResponse {
     this.pullRequestTitle = pullRequestTitle;
   }
 
-  public String getRepoId() {
+  public long getRepoId() {
     return repoId;
   }
 
-  public void setRepoId(String repoId) {
+  public void setRepoId(long repoId) {
     this.repoId = repoId;
   }
 

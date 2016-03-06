@@ -2,13 +2,12 @@ package com.alorma.travis.ui.presenter.builds;
 
 import com.alorma.travis.ui.presenter.BasePresenter;
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
-import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuild;
 import com.alorma.travisdk.datasource.builds.GetBuildDataSource;
 import com.alorma.travisdk.datasource.builds.cache.CacheGetBuildDataSource;
-import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractor;
 import com.alorma.travisdk.interactor.builds.GetBuildInteractorImpl;
+import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepositoryImpl;
 import com.alorma.travisdk.repository.builds.GetBuildRepository;
 import com.alorma.travisdk.repository.builds.GetBuildRepositoryImpl;
 import rx.Subscription;
@@ -21,7 +20,7 @@ public class LastBuildPresenter extends BasePresenter {
   private LastBuildCallback lastBuildCallback = lastBuildCallbackNull;
   private Subscription subscription;
 
-  public void start(RepositoryResponse repositoryResponse) {
+  public void start(long repoId, long buildId) {
     GetBuildDataSource api = new ApiGetBuildDataSource(new RetrofitWrapper());
 
     GetBuildDataSource cache = new CacheGetBuildDataSource();
@@ -30,7 +29,7 @@ public class LastBuildPresenter extends BasePresenter {
     GetBuildInteractor interactor =
         new GetBuildInteractorImpl(repository, ActiveCredentialRepositoryImpl.getInstance());
 
-    subscription = interactor.get(repositoryResponse.getId(), repositoryResponse.lastBuildId)
+    subscription = interactor.get(repoId, buildId)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> lastBuildCallback.willLoadBuild())

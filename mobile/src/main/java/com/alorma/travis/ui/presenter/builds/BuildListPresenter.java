@@ -2,7 +2,6 @@ package com.alorma.travis.ui.presenter.builds;
 
 import com.alorma.travis.ui.presenter.BasePresenter;
 import com.alorma.travis.ui.presenter.utils.RetrofitWrapper;
-import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuildResponse;
 import com.alorma.travisdk.datasource.builds.GetBuildDataSource;
 import com.alorma.travisdk.datasource.builds.cache.CacheGetBuildDataSource;
@@ -22,7 +21,7 @@ public class BuildListPresenter extends BasePresenter {
   private BuildsCallback buildsCallback = buildsCallbackNull;
   private Subscription subscription;
 
-  public void start(RepositoryResponse repositoryResponse) {
+  public void start(String owner, String name) {
     GetBuildDataSource api = new ApiGetBuildDataSource(new RetrofitWrapper());
 
     GetBuildDataSource cache = new CacheGetBuildDataSource();
@@ -31,7 +30,7 @@ public class BuildListPresenter extends BasePresenter {
     GetBuildsListInteractor interactor =
         new GetBuildsListInteractorImpl(repository, ActiveCredentialRepositoryImpl.getInstance());
 
-    subscription = interactor.get(repositoryResponse.getOwner(), repositoryResponse.getRepo())
+    subscription = interactor.get(owner, name)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> buildsCallback.willLoadBuilds())

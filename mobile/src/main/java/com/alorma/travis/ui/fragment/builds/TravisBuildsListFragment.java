@@ -1,5 +1,6 @@
 package com.alorma.travis.ui.fragment.builds;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,26 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
+import com.alorma.travis.ui.Enumerators;
+import com.alorma.travis.ui.activity.TravisBuildActivityIntentBuilder;
 import com.alorma.travis.ui.adapter.BuildsAdapter;
 import com.alorma.travis.ui.presenter.builds.BuildListPresenter;
-import com.alorma.travisdk.bean.response.RepositoryResponse;
 import com.alorma.travisdk.bean.response.TravisBuildResponse;
 import java.util.List;
 
 public class TravisBuildsListFragment extends Fragment
     implements BuildListPresenter.BuildsCallback, BuildsAdapter.BuildAdapterCallback {
 
-  private RepositoryResponse repositoryResponse;
   private BuildListPresenter presenter;
 
   @Bind(R.id.recycler) RecyclerView recyclerView;
   @Bind(R.id.progressBar) ProgressBar progressBar;
 
   private BuildsAdapter buildsAdapter;
+
+  private String repoOwner;
+  private String repoName;
 
   @Nullable
   @Override
@@ -57,9 +60,7 @@ public class TravisBuildsListFragment extends Fragment
     super.onStart();
 
     presenter.setBuildsCallback(this);
-    if (repositoryResponse != null) {
-      presenter.start(repositoryResponse);
-    }
+    presenter.start(repoOwner, repoName);
   }
 
   @Override
@@ -70,7 +71,8 @@ public class TravisBuildsListFragment extends Fragment
 
   private void readArguments() {
     if (getArguments() != null) {
-      repositoryResponse = getArguments().getParcelable(RepositoryResponse.class.getSimpleName());
+      repoOwner = getArguments().getString(Enumerators.Keys.Repository.EXTRA_OWNER);
+      repoName = getArguments().getString(Enumerators.Keys.Repository.EXTRA_NAME);
     }
   }
 
@@ -98,6 +100,10 @@ public class TravisBuildsListFragment extends Fragment
 
   @Override
   public void onBuildSelected(TravisBuildResponse travisBuild) {
-    Toast.makeText(getActivity(), "Build: " + travisBuild.getNumber(), Toast.LENGTH_SHORT).show();
+    Intent intent =
+        new TravisBuildActivityIntentBuilder(travisBuild.getRepoId(), travisBuild.getId()).build(
+            getActivity());
+
+    startActivity(intent);
   }
 }
