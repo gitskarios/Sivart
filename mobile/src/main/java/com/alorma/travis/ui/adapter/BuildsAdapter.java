@@ -1,6 +1,7 @@
 package com.alorma.travis.ui.adapter;
 
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,8 +36,25 @@ public class BuildsAdapter extends BaseAdapter<TravisBuildResponse, BuildsAdapte
 
     holder.statusLine.setBackgroundColor(getColor(holder.statusLine, color));
 
-    holder.buildTitle.setText(
-        "#".concat(String.valueOf(travisBuild.getNumber())));
+    holder.buildTitle.setText(buildMessage(travisBuild));
+  }
+
+  @NonNull
+  private String buildMessage(TravisBuildResponse travisBuild) {
+
+    StringBuilder message = new StringBuilder();
+
+    message.append("#");
+    message.append(travisBuild.getNumber());
+    message.append(" ");
+
+    if (travisBuild.getCommit() != null) {
+      message.append(travisBuild.getCommit().getMessage());
+    } else {
+      message.append(travisBuild.getCommitId());
+    }
+
+    return message.toString();
   }
 
   private int getColor(View view, int color) {

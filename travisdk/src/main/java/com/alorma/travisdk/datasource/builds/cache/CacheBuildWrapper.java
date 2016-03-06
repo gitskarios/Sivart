@@ -1,10 +1,9 @@
 package com.alorma.travisdk.datasource.builds.cache;
 
 import com.alorma.travisdk.bean.response.TravisBuild;
-import com.alorma.travisdk.bean.response.TravisBuildResponse;
+import com.alorma.travisdk.bean.response.TravisBuildsListResponse;
 import com.fewlaps.quitnowcache.QNCache;
 import com.fewlaps.quitnowcache.QNCacheBuilder;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CacheBuildWrapper {
@@ -16,7 +15,7 @@ public class CacheBuildWrapper {
       new QNCacheBuilder().setDefaultKeepaliveInMillis(TimeUnit.MINUTES.toMillis(20))
           .createQNCache();
 
-  private static QNCache<List<TravisBuildResponse>> cacheList =
+  private static QNCache<TravisBuildsListResponse> cacheList =
       new QNCacheBuilder().setDefaultKeepaliveInMillis(TimeUnit.MINUTES.toMillis(20))
           .createQNCache();
 
@@ -40,11 +39,11 @@ public class CacheBuildWrapper {
     cacheItem.set(convertToEffectiveReposKey(repoId, buildId), build);
   }
 
-  public static List<TravisBuildResponse> get(String owner, String name) {
+  public static TravisBuildsListResponse get(String owner, String name) {
     return cacheList.get(convertToEffectiveReposKey(owner, name));
   }
 
-  public static void set(String owner, String name, List<TravisBuildResponse> builds) {
+  public static void set(String owner, String name, TravisBuildsListResponse builds) {
     cacheList.set(convertToEffectiveReposKey(owner, name), builds);
   }
 }

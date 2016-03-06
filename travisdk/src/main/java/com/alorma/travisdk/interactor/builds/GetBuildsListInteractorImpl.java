@@ -1,9 +1,12 @@
 package com.alorma.travisdk.interactor.builds;
 
 import com.alorma.travisdk.bean.response.TravisBuildResponse;
+import com.alorma.travisdk.bean.response.TravisCommitResponse;
 import com.alorma.travisdk.interactor.credentials.ActiveCredentialRepository;
 import com.alorma.travisdk.repository.builds.GetBuildsListRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import rx.Observable;
 
 public class GetBuildsListInteractorImpl implements GetBuildsListInteractor {
@@ -30,6 +33,21 @@ public class GetBuildsListInteractorImpl implements GetBuildsListInteractor {
     return credentialRepository.getCredential().flatMap(credential -> {
       repository.setCredential(credential);
       return repository.get(owner, name);
+    }).map(travisBuildResponses -> {
+
+      List<TravisBuildResponse> builds = travisBuildResponses.getBuilds();
+      List<TravisCommitResponse> commits = travisBuildResponses.getCommits();
+
+      Map<Long, TravisCommitResponse> commitResponseMap = new HashMap<>();
+      for (TravisCommitResponse commitResponse : commits) {
+        commitResponseMap.put(commitResponse.getId(), commitResponse);
+      }
+
+      for (TravisBuildResponse build : builds) {
+        build.setCommit(commitResponseMap.get(build.getCommitId()));
+      }
+
+      return builds;
     });
   }
 }
