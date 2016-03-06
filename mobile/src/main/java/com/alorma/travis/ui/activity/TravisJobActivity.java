@@ -1,16 +1,17 @@
 package com.alorma.travis.ui.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.text.Html;
+import android.support.v4.widget.NestedScrollView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.travis.R;
 import com.alorma.travis.ui.presenter.logs.LogPresenter;
 import com.alorma.travisdk.bean.response.TravisJobResponse;
-import com.alorma.travisdk.bean.utils.Credential;
 import se.emilsjolander.intentbuilder.Extra;
 import se.emilsjolander.intentbuilder.IntentBuilder;
 
@@ -20,6 +21,7 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
   @Extra TravisJobResponse jobResponse;
 
   @Bind(android.R.id.text1) TextView textLog;
+  @Bind(R.id.scrollView) NestedScrollView scrollView;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,5 +58,13 @@ import se.emilsjolander.intentbuilder.IntentBuilder;
   @Override
   public void onLogLoaded(String log) {
     textLog.setText(log);
+    sendScroll();
+  }
+
+  private void sendScroll() {
+    final Handler handler = new Handler();
+    new Thread(() -> {
+      handler.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+    }).start();
   }
 }
