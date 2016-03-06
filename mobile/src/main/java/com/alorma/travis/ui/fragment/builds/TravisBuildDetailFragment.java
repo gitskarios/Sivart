@@ -139,14 +139,23 @@ public class TravisBuildDetailFragment extends Fragment
 
         List<TravisJobResponse> jobs = build.getJobs();
 
-        if (jobs != null && jobs.size() > 1) {
-          for (TravisJobResponse job : jobs) {
+        if (jobs != null) {
+          if (jobs.size() == 1) {
+            TravisJobResponse job = jobs.get(0);
             JobBuildInfo jobBuild = new JobBuildInfo();
-            jobBuild.setDrawableHolder(
-                getIcon(getIconFromState(job)).color(getColorFromState(job)));
-            jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+            jobBuild.setDrawableHolder(getIcon(Octicons.Icon.oct_terminal).color(Color.DKGRAY));
+            jobBuild.setTitle(new StringPrimaryHolder("Vew log"));
             jobBuild.setJob(job);
             infos.add(jobBuild);
+          } else if (jobs.size() > 1) {
+            for (TravisJobResponse job : jobs) {
+              JobBuildInfo jobBuild = new JobBuildInfo();
+              jobBuild.setDrawableHolder(
+                  getIcon(getIconFromState(job)).color(getColorFromState(job)));
+              jobBuild.setTitle(new StringPrimaryHolder(job.getNumber()));
+              jobBuild.setJob(job);
+              infos.add(jobBuild);
+            }
           }
         }
       }
